@@ -64,18 +64,26 @@
 				"async": true
 			},
 			"routes": [
-				{
-					"pattern": "",
-					"name": "main",
-					"target": "main"
-				}
-			],
-			"targets": {
-				"main": {
-					"viewId": "main",
-					"viewName": "Main"
-				}
-			}
+                {
+                    "pattern": "",
+                    "name": "login",
+                    "target": "login"
+                },
+                {
+                    "pattern": "Main",
+                    "name": "main", 
+                    "target": "main"
+                }
+            ],
+            "targets": {
+                "login": {
+                    "viewName": "Login"
+                },
+                "main": {
+                    "viewName": "Main", 
+                    "viewId": "main"
+                }
+            }
 		}
 	}
 }
