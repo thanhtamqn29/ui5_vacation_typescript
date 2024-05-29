@@ -5,7 +5,7 @@ import Dialog from "sap/m/Dialog";
 import { fetchWithAuth } from "../utils/fetchWithAuth";
 
 export default class Main extends BaseController {
-    public onInit(): void {
+    public async onInit(): void {
         const oViewModel = new JSONModel({
             value: [],
             newRequest: {
@@ -16,7 +16,7 @@ export default class Main extends BaseController {
             }
         });
         this.getView().setModel(oViewModel, "view");
-        this.loadRequests();
+        void await this.loadRequests();
     }
 
     private async loadRequests(): Promise<void> {

@@ -13,13 +13,13 @@ export default class Login extends BaseController {
         this.getView().setModel(oViewModel, "view");
     }
 
-    public onLoginPress(): void {
+    public async onLoginPress  (): Promise<void> {
         const oView = this.getView();
         const sUsername = (oView.byId("usernameInput") as Input).getValue();
         const sPassword = (oView.byId("passwordInput") as Input).getValue();
 
         if (this._validateCredentials(sUsername, sPassword)) {
-            this._login(sUsername, sPassword);
+           await this._login(sUsername, sPassword);
         } else {
             MessageBox.error("Invalid credentials. Please try again.");
         }
@@ -31,7 +31,7 @@ export default class Login extends BaseController {
 
     private async _login(username: string, password: string): Promise<void> {
         try {
-            const response = await fetchWithAuth("http://localhost:4004/public/login", {
+            const response = await fetchWithAuth("https://vacation-srv-mediating-nyala-rd.cfapps.us10-001.hana.ondemand.com/public/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

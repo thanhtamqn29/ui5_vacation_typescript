@@ -13,7 +13,7 @@ export default class Manager extends BaseController {
             value: [],
         });
         this.getView().setModel(oViewModel, "view");
-        this.loadRequests();
+        void this.loadRequests();
     }
 
     private async loadRequests(): Promise<void> {

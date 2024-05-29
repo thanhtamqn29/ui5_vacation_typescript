@@ -1,7 +1,7 @@
 # build results
 dist
 coverage
-
+resources/
 # Logs
 logs
 *.log
@@ -14,3 +14,4 @@ node_modules/
 
 .DS_Store
 .env
+package-lock.json
