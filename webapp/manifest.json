@@ -73,6 +73,16 @@
                     "pattern": "Main",
                     "name": "main", 
                     "target": "main"
+                },
+				{
+                    "pattern": "Manager",
+                    "name": "manager", 
+                    "target": "manager"
+                },
+				{
+                    "pattern": "HrManager",
+                    "name": "hrManager", 
+                    "target": "hrManager"
                 }
             ],
             "targets": {
@@ -82,6 +92,14 @@
                 "main": {
                     "viewName": "Main", 
                     "viewId": "main"
+                },
+				"manager": {
+                    "viewName": "Manager", 
+                    "viewId": "Manager"
+                },
+				"hrManager": {
+                    "viewName": "HrManager", 
+                    "viewId": "hrManager"
                 }
             }
 		}

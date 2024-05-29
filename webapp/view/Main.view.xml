@@ -106,7 +106,7 @@
             </buttons>
         </Dialog>
 
-		<!-- Update Request Dialog -->
+    
         <Dialog
             id="updateRequestDialog"
             title="Update Leave Request"

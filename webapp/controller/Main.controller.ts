@@ -2,9 +2,6 @@ import BaseController from "./BaseController";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import MessageBox from "sap/m/MessageBox";
 import Dialog from "sap/m/Dialog";
-import Input from "sap/m/Input"; // Import các control cần thiết
-import DatePicker from "sap/m/DatePicker";
-import Select from "sap/m/Select";
 import { fetchWithAuth } from "../utils/fetchWithAuth";
 
 export default class Main extends BaseController {

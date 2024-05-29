@@ -44,11 +44,10 @@ export default class Login extends BaseController {
             }
 
             const data = await response.json();
-            localStorage.setItem("accessToken", data.value.accessToken);
-            
+            localStorage.setItem("accessToken", data.value.accessToken);             
             MessageBox.success("Login successful!", {
                 onClose: () => {
-                    this.getRouter().navTo("main");
+                    this.getRouter().navTo("hrManager");
 
                 }
             });
