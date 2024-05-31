@@ -3,6 +3,7 @@ import MessageBox from "sap/m/MessageBox";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import Input from "sap/m/Input";
 import { fetchWithAuth } from "../utils/fetchWithAuth";
+import { jwtDecode } from "jwt-decode";
 
 export default class Login extends BaseController {
     public onInit(): void {
@@ -44,11 +45,19 @@ export default class Login extends BaseController {
             }
 
             const data = await response.json();
-            localStorage.setItem("accessToken", data.value.accessToken);             
+            localStorage.setItem("accessToken", data.value.accessToken);       
+            const tokenPayload = getRoleFromToken(data.value.accessToken); 
+
+            
             MessageBox.success("Login successful!", {
                 onClose: () => {
-                    this.getRouter().navTo("hrManager");
-
+                    if (tokenPayload.role === "manager" && tokenPayload.department_id === 2) {
+                        this.getRouter().navTo("hrManager");
+                    } else if (tokenPayload.role === "staff") {
+                        this.getRouter().navTo("main");
+                    } else if (tokenPayload.role === "manager") {
+                        this.getRouter().navTo("manager");
+                    };
                 }
             });
 
@@ -56,5 +65,19 @@ export default class Login extends BaseController {
             const errorMessage = (error as Error).message || "An error occurred during login.";
             MessageBox.error(errorMessage);
         }
+    }
+
+ 
+}
+function getRoleFromToken(token: string): { role: string, department_id: number } | null {
+    try {
+        const tokenPayload = JSON.parse(atob(token.split('.')[1]));
+        return {
+            role: tokenPayload.role,
+            department_id: tokenPayload.department_id
+        };
+    } catch (error) {
+        console.error("Error decoding token:", error);
+        return null;
     }
 }
