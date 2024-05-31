@@ -13,7 +13,7 @@ export default class Manager extends BaseController {
             value: [],
         });
         this.getView().setModel(oViewModel, "view");
-        this.loadRequests();
+        void this.loadRequests();
     }
 
     private async loadRequests(): Promise<void> {
@@ -61,7 +61,7 @@ export default class Manager extends BaseController {
             .then(() => {
                 MessageBox.success(`Request has been ${sAction} successfully.`);
                 oDialog.close();
-                this.loadRequests();
+                void this.loadRequests();
             })
             .catch((error) => {
                 MessageBox.error(`Failed to ${sAction} request: ${(error as Error).message}`);

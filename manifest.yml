@@ -1,0 +1,13 @@
+# Generated manifest.yml based on template version 0.1.0
+# appName = myapp
+# language=nodejs
+# multitenancy=false
+---
+applications:
+
+- name: vacation-ui
+  random-route: true  # for development only
+  path: ./dist
+  memory: 256M
+  buildpack: staticfile_buildpack
+
