@@ -4,7 +4,7 @@
     xmlns:core="sap.ui.core"
     xmlns="sap.m"
 >
-<ScrollContainer vertical="true" height="100%">
+<!-- <ScrollContainer vertical="true" height="100%">
     <tnt:ToolHeader id="shellLikeToolHeader" class="sapUiTinyMargin">
         <Button icon="sap-icon://menu2" type="Transparent" tooltip="Menu">
             <layoutData>
@@ -70,7 +70,7 @@
 
     <tnt:ToolHeader id="shellLikeToolHeaderOnlyMandatoryControls" class="sapUiTinyMargin sapUiLargeMarginTop">
     </tnt:ToolHeader>
-</ScrollContainer>
+</ScrollContainer> -->
 
     <Page title="Employee Leave Requests">
         <content>
