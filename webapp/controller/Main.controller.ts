@@ -2,7 +2,7 @@ import BaseController from "./BaseController";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import MessageBox from "sap/m/MessageBox";
 import Dialog from "sap/m/Dialog";
-import { requestApi } from "myapp/api/requestApi";
+import { requestApi } from "myapp/api/epl-requestApi";
 
 export default class Main extends BaseController {
 	public onInit(): void {

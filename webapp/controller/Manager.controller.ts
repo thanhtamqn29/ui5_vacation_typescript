@@ -4,7 +4,6 @@ import JSONModel from "sap/ui/model/json/JSONModel";
 import { fetchWithAuth } from "../utils/fetchWithAuth";
 import Dialog from "sap/m/Dialog";
 import TextArea from "sap/m/TextArea";
-import Log from "sap/base/Log";
 
 export default class Manager extends BaseController {
 
