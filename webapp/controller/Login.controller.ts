@@ -5,6 +5,7 @@ import Input from "sap/m/Input";
 import { authApi } from "../api/authApi";
 
 export default class Login extends BaseController {
+
 	public onInit(): void {
 		const oViewModel = new JSONModel({
 			username: "",
@@ -50,5 +51,5 @@ export default class Login extends BaseController {
 				(error as Error).message || "An error occurred during login.";
 			MessageBox.error(errorMessage);
 		}
-	}
+
 }

@@ -5,6 +5,7 @@ import Dialog from "sap/m/Dialog";
 import { requestApi } from "myapp/api/requestApi";
 
 export default class Main extends BaseController {
+
 	public onInit(): void {
 		const oViewModel = new JSONModel({
 			value: [],
@@ -87,6 +88,7 @@ export default class Main extends BaseController {
 			);
 		}
 	}
+
 
 	public onDeleteRequest(oEvent: any): void {
 		const oItem = oEvent

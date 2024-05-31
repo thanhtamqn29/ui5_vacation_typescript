@@ -1,0 +1,6 @@
+applications:
+- name: vacation-ui5
+  memory: 512M
+  path: ./dist
+  buildpack: staticfile_buildpack
+  health-check-type: port

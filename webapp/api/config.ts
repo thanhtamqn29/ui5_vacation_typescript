@@ -1,3 +1,4 @@
+
 import axios, { AxiosRequestConfig } from "axios";
 
 const url = "http://localhost:4004";
@@ -19,3 +20,4 @@ export const facilities = {
 		return await axios.delete(`${url}/${srv}`, config);
 	},
 };
+

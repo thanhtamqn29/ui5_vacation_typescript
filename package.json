@@ -1,4 +1,5 @@
 {
+
 	"name": "myapp",
 	"version": "1.0.0",
 	"description": "UI5 Application: myapp",
@@ -41,4 +42,5 @@
 		"axios": "^1.7.2",
 		"jwt-decode": "^4.0.0"
 	}
+
 }
