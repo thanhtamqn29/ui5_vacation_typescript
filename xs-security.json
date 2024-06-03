@@ -1,6 +1,7 @@
 {
 	"xsappname": "vacation",
 	"tenant-mode": "dedicated",
+  "authorities-inheritance": false,
 	"scopes": [
 		{
 			"name": "$XSAPPNAME.staff",
