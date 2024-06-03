@@ -7,7 +7,7 @@ applications:
 
 - name: vacation-ui
   random-route: true  # for development only
-  path: ./dist
+  path: ./app
   memory: 256M
   buildpack: staticfile_buildpack
 
