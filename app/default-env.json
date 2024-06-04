@@ -1,4 +1,38 @@
 {
- "PORT": "8080"
-
+  "PORT": "8080",
+  "VCAP_SERVICES": {
+    "xsuaa": [
+      {
+        "label": "xsuaa",
+        "provider": null,
+        "plan": "application",
+        "name": "vacation-xsuaa",
+        "tags": ["xsuaa"],
+        "instance_guid": "5dd32ba4-3b73-4f58-a68e-46c09ce77458",
+        "instance_name": "vacation-xsuaa",
+        "binding_guid": "3a7997c3-2035-4382-a1e4-c5d334fef54b",
+        "binding_name": null,
+        "credentials": {
+          "tenantmode": "dedicated",
+          "sburl": "https://internal-xsuaa.authentication.us10.hana.ondemand.com",
+          "subaccountid": "358732d2-999a-4942-9534-7328ac87736e",
+          "credential-type": "instance-secret",
+          "clientid": "sb-vacation!t268044",
+          "xsappname": "vacation!t268044",
+          "clientsecret": "YEwVY/38RP10j0WKlhHoozcRD3E=",
+          "serviceInstanceId": "5dd32ba4-3b73-4f58-a68e-46c09ce77458",
+          "url": "https://7df335f7trial.authentication.us10.hana.ondemand.com",
+          "uaadomain": "authentication.us10.hana.ondemand.com",
+          "verificationkey": "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsFDrN9BkXvqzB1LoYz80\nKX/QyZgeF5KNiopkUgnfm0AftUk4eY2iBhdC6Olp25YGPseBaPrOugyhxa+RpZKs\nWl2p93KCy39rQHJ5l2VXqnZJsGDw81TqAn4tuMgaF18vT2gaRCsJ+lF8vERS1EgK\n87xd6BA2IRlRo30ly4j8x32zjZQKAKdKRLQdJ5uByekj0UR/MOQVLVDMXs60Ha0l\nzWrO/Sg3rKEcJ8bJMG+JYVcfCrBkGGn4F6IGC6lb1X8PjlXl77KY9i+dCvuK0csE\npDAsl0uHbKDBx8DwfbuykltxvTEsyuBerhVU74uzQAHR2sOzz5bEoM+AD6zdf+8r\n9wIDAQAB\n-----END PUBLIC KEY-----",
+          "apiurl": "https://api.authentication.us10.hana.ondemand.com",
+          "identityzone": "7df335f7trial",
+          "identityzoneid": "358732d2-999a-4942-9534-7328ac87736e",
+          "tenantid": "358732d2-999a-4942-9534-7328ac87736e",
+          "zoneid": "358732d2-999a-4942-9534-7328ac87736e"
+        },
+        "syslog_drain_url": null,
+        "volume_mounts": []
+      }
+    ]
+  }
 }

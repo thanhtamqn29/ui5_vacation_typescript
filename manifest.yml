@@ -4,7 +4,6 @@
 # multitenancy=false
 ---
 applications:
-
 - name: vacation-approuter
   random-route: true  # for development only
   path: app
@@ -13,5 +12,6 @@ applications:
   services:
   - vacation-xsuaa
   - vacation-html5-runtime
+  stack: cflinuxfs3
 
 

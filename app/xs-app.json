@@ -1,13 +1,18 @@
 {
-  "welcomeFile": "index.html",
+  "welcomeFile": "main/index.html",
   "authenticationMethod": "route",
   "routes": [
     {
-      "source": "^/app/(.*)$",
-      "target": "$1",
-      "localDir": ".",
+      "source": "^/main/(.*)$",
+      "target": "myapp/$1",
+      "service": "html5-apps-repo-rt",
       "authenticationType": "xsuaa",
       "cacheControl": "no-cache, no-store, must-revalidate"
+    },
+    {
+      "source": "^/user-api(.*)",
+      "target": "$1",
+      "service": "sap-approuter-userapi"
     }
   ]
 }
