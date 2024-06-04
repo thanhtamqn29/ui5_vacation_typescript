@@ -1,0 +1,107 @@
+{
+	"_version": "1.12.0",
+
+	"sap.app": {
+		"id": "myapp",
+		"type": "application",
+		"i18n": "i18n/i18n.properties",
+		"title": "{{appTitle}}",
+		"description": "{{appDescription}}",
+		"applicationVersion": {
+			"version": "${version}"
+		}
+	},
+
+	"sap.ui": {
+		"technology": "UI5",
+		"icons": {},
+		"deviceTypes": {
+			"desktop": true,
+			"tablet": true,
+			"phone": true
+		}
+	},
+
+	"sap.ui5": {
+		"rootView": {
+			"viewName": "myapp.view.App",
+			"type": "XML",
+			"async": true,
+			"id": "app"
+		},
+
+		"dependencies": {
+			"minUI5Version": "1.124.0",
+			"libs": {
+				"sap.ui.core": {},
+				"sap.m": {}
+			}
+		},
+
+		"handleValidation": true,
+
+		"contentDensities": {
+			"compact": true,
+			"cozy": true
+		},
+
+		"models": {
+			"i18n": {
+				"type": "sap.ui.model.resource.ResourceModel",
+				"settings": {
+					"bundleName": "myapp.i18n.i18n"
+				}
+			}
+		},
+
+		"routing": {
+			"config": {
+				"routerClass": "sap.m.routing.Router",
+				"viewType": "XML",
+				"viewPath": "myapp.view",
+				"controlId": "app",
+				"controlAggregation": "pages",
+				"async": true
+			},
+			"routes": [
+                {
+                    "pattern": "",
+                    "name": "login",
+                    "target": "login"
+                },
+                {
+                    "pattern": "Main",
+                    "name": "main", 
+                    "target": "main"
+                },
+				{
+                    "pattern": "Manager",
+                    "name": "manager", 
+                    "target": "manager"
+                },
+				{
+                    "pattern": "HrManager",
+                    "name": "hrManager", 
+                    "target": "hrManager"
+                }
+            ],
+            "targets": {
+                "login": {
+                    "viewName": "Login"
+                },
+                "main": {
+                    "viewName": "Main", 
+                    "viewId": "main"
+                },
+				"manager": {
+                    "viewName": "Manager", 
+                    "viewId": "Manager"
+                },
+				"hrManager": {
+                    "viewName": "HrManager", 
+                    "viewId": "hrManager"
+                }
+            }
+		}
+	}
+}

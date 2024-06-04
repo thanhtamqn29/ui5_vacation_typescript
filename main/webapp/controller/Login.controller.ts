@@ -1,0 +1,53 @@
+import { authApi } from "myapp/api/authApi";
+import BaseController from "./BaseController";
+import JSONModel from "sap/ui/model/json/JSONModel";
+
+export default class Login extends BaseController {
+	public async onInit(): Promise<void> {
+		const oModel = new JSONModel();
+
+		await oModel.loadData("/user-api/currentUser");
+
+		this.getView().setModel(oModel);
+
+		oModel.attachRequestCompleted((oEvent) => {
+			if (oEvent.getParameter("success")) {
+				oModel.setProperty("/json", oModel.getJSON());
+				oModel.setProperty("/status", "Success");
+			} else {
+				const msg = oEvent.getParameter("errorobject");
+				oModel.setProperty(
+					"/status",
+					msg || "Unknown error retrieving user info"
+				);
+			}
+		});
+
+		try {
+			const response = await authApi.getIASAttributes({
+				data: oModel.getData(),
+			});
+			const accessToken = response.data.value.accessToken;
+
+			localStorage.setItem("accessToken", accessToken);
+
+			await this.navigation();
+		} catch (error) {
+			console.log(error);
+		}
+	}
+
+	private async navigation() {
+		try {
+			const { data } = await authApi.getCurrentUser(
+				localStorage.getItem("accessToken")
+			);
+			const getInfo = data.value[0];
+			if (getInfo.department_id) this.navTo("hrManager");
+			if (getInfo.role === "staff") this.navTo("main");
+			if (getInfo.role === "manager") this.navTo("manager");
+		} catch (error) {
+			console.log(error);
+		}
+	}
+}
