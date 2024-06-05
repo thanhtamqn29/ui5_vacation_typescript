@@ -6,6 +6,30 @@
     <App>
         <pages>
             <Page title="Manager page">
+            <customHeader>
+            <Bar>               
+                   
+                <contentRight>
+                 <Button
+                        icon="sap-icon://bell"
+                        press="onNotificationPress"
+                    >
+                        <customData>
+                            <BadgeCustomData
+                                key="badge"
+                                value="2"
+                            />
+                        </customData>
+                    </Button>
+                    <Avatar
+                        initials="JD"
+                        displaySize="Custom"
+                        press="onProfilePress"
+                        customDisplaySize="2rem"
+                    />
+                </contentRight>
+            </Bar>
+        </customHeader>
                 <content>
                     <Table id="requestsTable" items="{path: 'view>/value'}">
                         <columns>
@@ -56,10 +80,15 @@
                                     <Text text="{view>isOutOfDay}" />
                                     <Text text="{view>comment}" />
                                     <Text text="{view>shift}" />
-                                    <HBox>
-                                        <Button icon="sap-icon://accept"  type="Transparent" press="onAccepted" />
-                                        <Button icon="sap-icon://decline" type="Transparent" press="onReject" />
-                                    </HBox>
+                                  <HBox>
+    <Button icon="sap-icon://accept" type="Accept" press="onAccepted" />
+    <Button icon="sap-icon://decline" type="Reject" press="onReject">
+        <layoutData>
+            <FlexItemData styleClass="sapUiTinyMarginBegin" />
+        </layoutData>
+    </Button>
+</HBox>
+
                                 </cells>
                             </ColumnListItem>
                         </items>

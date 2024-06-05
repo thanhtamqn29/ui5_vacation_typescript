@@ -5,7 +5,7 @@
     <App>
         <pages>
             <Page title="Login">
-                <content>
+                <content>   
                     <VBox class="sapUiSmallMargin">
                         <Input id="usernameInput" value="{view>/username}" placeholder="Username" />
                         <Input id="passwordInput" type="Password" value="{view>/password}" placeholder="Password" />
