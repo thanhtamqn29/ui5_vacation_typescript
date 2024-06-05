@@ -1,6 +1,7 @@
 import { authApi } from "myapp/api/authApi";
 import BaseController from "./BaseController";
 import JSONModel from "sap/ui/model/json/JSONModel";
+import MessageBox from "sap/m/MessageBox";
 
 export default class Login extends BaseController {
 	public async onInit(): Promise<void> {
@@ -43,11 +44,19 @@ export default class Login extends BaseController {
 				localStorage.getItem("accessToken")
 			);
 			const getInfo = data.value[0];
+			console.log(getInfo);
+			
 			if (getInfo.department_id) this.navTo("hrManager");
-			if (getInfo.role === "staff") this.navTo("main");
-			if (getInfo.role === "manager") this.navTo("manager");
+			else {
+				if (getInfo.role === "staff") this.navTo("main");
+				if (getInfo.role === "manager") this.navTo("manager");
+			}
+		
 		} catch (error) {
-			console.log(error);
+			MessageBox.error(
+				error.response.data?.error?.message ||
+					"An error occurred while creating the leave request."
+			);
 		}
 	}
 }

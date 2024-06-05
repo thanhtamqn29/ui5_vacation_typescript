@@ -25,10 +25,10 @@ export default class Main extends BaseController {
 			const oModel = this.getView().getModel("view") as JSONModel;
 			oModel.setProperty("/value", data.value);
 		} catch (error) {
-			const errorMessage =
-				(error as Error).message ||
-				"An error occurred while fetching leave requests.";
-			MessageBox.error(errorMessage);
+			MessageBox.error(
+				error.response.data?.error?.message ||
+					"An error occurred while creating the leave request."
+			);
 		}
 	}
 
@@ -118,10 +118,10 @@ export default class Main extends BaseController {
 
 						MessageBox.success("Leave request deleted successfully!");
 					} catch (error) {
-						const errorMessage =
-							(error as Error).message ||
-							"An error occurred while deleting the leave request.";
-						MessageBox.error(errorMessage);
+						MessageBox.error(
+							error.response.data?.error?.message ||
+								"An error occurred while creating the leave request."
+						);
 					}
 				}
 			},

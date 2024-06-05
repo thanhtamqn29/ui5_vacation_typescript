@@ -10,7 +10,7 @@ const requestApi = {
 	},
 
     updateRequest: async (id: any, updatedData: object, token: string) => {
-		return await facilities.put(`manage/MngRequests/${id}`, updatedData, {
+		return await facilities.patch(`manage/MngRequests/${id}`, updatedData, {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},

@@ -1,41 +1,11 @@
-<mvc:View xmlns:form="sap.ui.layout.form"
+<mvc:View xmlns:launchpad="sap.ushell.ui.launchpad" xmlns:layout="sap.ui.layout" xmlns:form="sap.ui.layout.form"
     controllerName="myapp.controller.Login"
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m">
-    <App>
-        <pages>
-            <Page title="{i18n>title}">
-        <content>
-          <VBox class="sapUiSmallMargin">
-            <form:SimpleForm id="SimpleFormDisplay354"
-              editable="false"
-              layout="ResponsiveGridLayout"
-              title="User Info"
-              labelSpanXL="3"
-              labelSpanL="3"
-              labelSpanM="3"
-              labelSpanS="12"
-              adjustLabelSpan="false"
-              emptySpanXL="4"
-              emptySpanL="4"
-              emptySpanM="4"
-              emptySpanS="0"
-              columnsXL="1"
-              columnsL="1"
-              columnsM="1"
-              singleContainerFullSize="false" >
-                <Label text="First Name" />
-                <Text text="{userInfo>/firstname}" />
-                <Label text="Last Name" />
-                <Text text="{userInfo>/lastname}" />
-                <Label text="Email" />
-                <Text text="{userInfo>/email}" />
-                <Label text="Display Name" />
-                <Text text="{userInfo>/displayName}" />                                                
-            </form:SimpleForm>
-          </VBox>
-        </content>
-      </Page>
-        </pages>
-    </App>
+      <FlexBox justifyContent="Center" alignItems="Center" height="100%">
+        <items>
+            <BusyIndicator  size="1.8rem" visible="true" text="Waiting for our system define who you are..." />
+        </items>
+    </FlexBox>
+
 </mvc:View>

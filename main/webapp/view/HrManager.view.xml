@@ -31,37 +31,37 @@
                     items="{path: 'view>/value'}">
                     <columns>
                         <Column>
-                            <Text text="REQUEST_ID" />
+                            <Text text="Request ID" />
                         </Column>
                         <Column>
-                            <Text text="DAY_OFF TYPE" />
+                            <Text text="Type" />
                         </Column>
                           <Column>
-                            <Text text="USERNAME" />
+                            <Text text="Full Name" />
                         </Column>
                           <Column>
-                            <Text text="DERPARTMENT_NAME" />
+                            <Text text="Department Name" />
                         </Column>
                         <Column>
-                            <Text text="REASON" />
+                            <Text text="Reason" />
                         </Column>
                         <Column>
-                            <Text text="STATUS" />
+                            <Text text="Status" />
                         </Column>
                         <Column>
-                            <Text text="START_DAY" />
+                            <Text text="Start Day" />
                         </Column>
                         <Column>
-                            <Text text="END_DAY" />
+                            <Text text="End day" />
                         </Column>
                         <Column>
-                            <Text text="IS_OUTOFDAY" />
+                            <Text text="Is out of Day" />
                         </Column>
                         <Column>
-                            <Text text="COMMENT" />
+                            <Text text="Comment" />
                         </Column>
                         <Column>
-                            <Text text="SHIFT" />
+                            <Text text="Shift" />
                         </Column>
                     </columns>
                     <items>
@@ -69,7 +69,7 @@
                             <cells>
                                 <Text text="{view>request_ID}" />
                                 <Text text="{view>dayOffType}" />
-                                <Text text="{view>username}" />
+                                <Text text="{view>fullName}" />
                                 <Text text="{view>departmentName}" />
                                 <Text text="{view>reason}" />
                                 <Text text="{view>request_status}" />

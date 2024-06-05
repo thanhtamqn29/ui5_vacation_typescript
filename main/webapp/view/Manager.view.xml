@@ -9,38 +9,41 @@
                 <content>
                     <Table id="requestsTable" items="{path: 'view>/value'}">
                         <columns>
+                             <Column>
+                            <Text text="Request ID" />
+                        </Column>
+                        <Column>
+                            <Text text="Type" />
+                        </Column>
+                          <Column>
+                            <Text text="Full Name" />
+                        </Column>
+                          <Column>
+                            <Text text="Department Name" />
+                        </Column>
+                        <Column>
+                            <Text text="Reason" />
+                        </Column>
+                        <Column>
+                            <Text text="Status" />
+                        </Column>
+                        <Column>
+                            <Text text="Start Day" />
+                        </Column>
+                        <Column>
+                            <Text text="End day" />
+                        </Column>
+                        <Column>
+                            <Text text="Is out of Day" />
+                        </Column>
+                        <Column>
+                            <Text text="Comment" />
+                        </Column>
+                        <Column>
+                            <Text text="Shift" />
+                        </Column>
                             <Column>
-                                <Text text="ID" />
-                            </Column>
-                            <Column>
-                                <Text text="DAY_OFF TYPE" />
-                            </Column>
-                            <Column>
-                                <Text text="REASON" />
-                            </Column>
-                            <Column>
-                                <Text text="USER_NAME" />
-                            </Column>
-                            <Column>
-                                <Text text="STATUS" />
-                            </Column>
-                            <Column>
-                                <Text text="START_DAY" />
-                            </Column>
-                            <Column>
-                                <Text text="END_DAY" />
-                            </Column>
-                            <Column>
-                                <Text text="IS_OUTOFDAY" />
-                            </Column>
-                            <Column>
-                                <Text text="COMMENT" />
-                            </Column>
-                            <Column>
-                                <Text text="SHIFT" />
-                            </Column>
-                            <Column>
-                                <Text text="ACTION" />
+                                <Text text="Action" />
                             </Column>
                         </columns>
                         <items>
@@ -49,7 +52,7 @@
                                     <Text text="{view>ID}" />
                                     <Text text="{view>dayOffType}" />
                                     <Text text="{view>reason}" />
-                                    <Text text="{view>user/username}" />
+                                    <Text text="{view>user/fullName}" />
                                     <Text text="{view>status}" />
                                     <Text text="{view>startDay}" />
                                     <Text text="{view>endDay}" />
