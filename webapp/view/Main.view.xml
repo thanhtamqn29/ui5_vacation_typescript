@@ -1,4 +1,4 @@
-<mvc:View xmlns:tnt="sap.tnt"
+<mvc:View
     xmlns:mvc="sap.ui.core.mvc"
     xmlns="sap.m"
     xmlns:core="sap.ui.core"
@@ -6,57 +6,64 @@
     xmlns:l="sap.ui.layout"
     xmlns:html="http://www.w3.org/1999/xhtml"
 >
-
-    <ScrollContainer vertical="true" height="100%">
-        <tnt:ToolHeader class="header-container">
-            <Title text="My Leave Request" wrapping="false">
-				<layoutData>
-					<OverflowToolbarLayoutData priority="Disappear"/>
-				</layoutData>
-			</Title>
-            <ToolbarSpacer />
-                       
-
-            <Button
-                icon="sap-icon://bell"
-                press="onNotificationPress"
-            >
-                <customData>
-                    <BadgeCustomData
-                        animation="Update"
-                        key="badge"
-                        value="{= ${view>/totalNotifications} ? ${view>/totalNotifications} : '0'}"
-                    />
-                </customData>
-            </Button>
-            <Avatar
-                initials="JD"
-                displaySize="Custom"
-                press="onProfilePress"
-                customDisplaySize="2rem"
-            />
-            <Popover
-                class="notificationPopover"
-                id="notificationPopover"
-                title="Notifications"
-                contentWidth="500px"
-                 contentWidth="500px"
-            contentHeight="350px"
-            verticalScrolling="true"
-            >
-                <NotificationList items="{view>/notifications}">
-                    <NotificationListItem
-                        description="{view>message}"
-                        unread="{view>unread}"
-                        press=".onListItemPress"
-                        truncate="true"
-
+    <Page showHeader="true">
+        <customHeader>
+            <Bar>               
+                   
+                <contentRight>
+                 <Button
+                        icon="sap-icon://bell"
+                        press="onNotificationPress"
                     >
-                    </NotificationListItem>
-                </NotificationList>
-            </Popover>
-        </tnt:ToolHeader>
-           
+                        <customData>
+                            <BadgeCustomData
+                                key="badge"
+                                value="2"
+                            />
+                        </customData>
+                    </Button>
+                    <Avatar
+                        initials="JD"
+                        displaySize="Custom"
+                        press="onProfilePress"
+                        customDisplaySize="2rem"
+                    />
+                </contentRight>
+            </Bar>
+        </customHeader>
+        <!-- <Popover
+            class="notificationPopover"
+            title="Notifications"
+            contentWidth="400px"
+            visible="{view>/notifications}"
+        >
+            <NotificationList items="{view>/value}">
+                <NotificationListItem
+                    title="{view>title}"
+                    description="{view>description}"
+                    showCloseButton="true"
+                    datetime="{view>datetime}"
+                    unread="{view>unread}"
+                    priority="{view>priority}"
+                    close=".onItemClose"
+                    press=".onListItemPress"
+                    authorPicture="{view>authorPicture}"
+                    authorAvatarColor="{view>authorAvatarColor}"
+                    authorInitials="{view>authorInitials}"
+                >
+                    <buttons>
+                        <Button
+                            text="Accept"
+                            press=".onAcceptPress"
+                        />
+                        <Button
+                            text="Reject"
+                            press=".onRejectPress"
+                        />
+                    </buttons>
+                </NotificationListItem>
+            </NotificationList>
+        </Popover> -->
         <VBox class="sapUiSmallMargin">
             <Button
                 text="Create Request"
@@ -331,6 +338,5 @@
                 />
             </buttons>
         </Dialog>
-    </ScrollContainer>
-   
+    </Page>
 </mvc:View>

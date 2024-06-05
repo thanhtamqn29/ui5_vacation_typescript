@@ -88,7 +88,7 @@ export default class HrManager extends BaseController {
 			); // Filtering by departmentName
 		}
 		if (sDate) {
-			const formattedDate = sDate.toISOString().split("T")[0]; // Convert to ISO date string (e.g., '2024-05-29')
+			const formattedDate = this.formatDate(sDate.toISOString());
 			const filterStartDay = new Filter(
 				"startDay",
 				FilterOperator.EQ,
@@ -111,6 +111,47 @@ export default class HrManager extends BaseController {
 			.getBinding("items") as ListBinding;
 		oBinding.filter(aFilters);
 	}
+    public onMenuAction(oEvent: any): void {
+        const oItem = oEvent.getParameter("item");
+        const sItemText = oItem.getText();
+
+        if (sItemText === "Export to Excel") {
+            this.exportToExcel();
+        } else if (sItemText === "Export as PDF") {
+            MessageBox.show("PDF export is not implemented yet.");
+        }
+    }
+
+    private async exportToExcel(): Promise<void> {
+        const sUrl = "http://localhost:4004/manage/manageHr/exportExcel()";
+        
+        await fetchWithAuth(sUrl, {
+            method: 'GET'
+        })
+        .then(response => {
+            console.log(response);
+            
+            if (!response.ok) {
+                throw new Error('Failed to export to Excel.');
+            }
+           
+            return response.blob();
+        })
+        .then(blob => {
+        
+            
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Report.xlsx'; 
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        })
+        .catch(error => {
+            MessageBox.error(error.message || 'An error occurred while exporting to Excel.');
+        });
+    }
 	private formatDate(date: string): string {
 		const dateObj = new Date(date);
 		const year = dateObj.getFullYear();

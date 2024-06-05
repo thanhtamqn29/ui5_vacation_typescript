@@ -2,48 +2,37 @@ import BaseController from "./BaseController";
 import JSONModel from "sap/ui/model/json/JSONModel";
 import MessageBox from "sap/m/MessageBox";
 import Dialog from "sap/m/Dialog";
-import { requestApi } from "myapp/api/epl-requestApi";
-import { notificationApi } from "myapp/api/notificationApi";
-
+import { fetchWithAuth } from "../utils/fetchWithAuth";
 export default class Main extends BaseController {
-	public async onInit(): void {
+	public onInit(): void {
 		const oViewModel = new JSONModel({
 			value: [],
 			newRequest: {},
 			currentRequest: {},
-			notifications: [],
-			totalNotifications: "0",
 		});
 		this.getView().setModel(oViewModel, "view");
-		void await this.loadRequests();
-		void await this.loadNotifications();
+		this.loadRequests();
 	}
-	private async loadNotifications(): Promise<void> {
-		const { data, status } = await notificationApi.getNotificationsEpl(
-			localStorage.getItem("accessToken")
-		);
-		if (status !== 200) throw new Error("Failed to create leave request");
 
-		console.log(data);
-
-		const oModel = this.getView().getModel("view") as JSONModel;
-		oModel.setProperty("/notifications", data.value);
-		oModel.setProperty("/totalNotifications", data.value.length);
-	}
 	private async loadRequests(): Promise<void> {
 		try {
-			const token = localStorage.getItem("accessToken");
-			const { data } = await requestApi.getRequests(token);
+			const response = await fetchWithAuth(
+				"http://localhost:4004/request/EplRequests"
+			);
 
-			if (!data.value) throw new Error("Failed to fetch leave requests");
+			if (!response.ok) {
+				throw new Error("Failed to fetch leave requests");
+			}
+
+			const data = await response.json();
 
 			const oModel = this.getView().getModel("view") as JSONModel;
 			oModel.setProperty("/value", data.value);
 		} catch (error) {
-			MessageBox.error(
-				error.response.data?.error?.message ||
-					"An error occurred while creating the leave request."
-			);
+			const errorMessage =
+				(error as Error).message ||
+				"An error occurred while fetching leave requests.";
+			MessageBox.error(errorMessage);
 		}
 	}
 
@@ -63,28 +52,31 @@ export default class Main extends BaseController {
 
 	public async onCreateRequest(): Promise<void> {
 		const oModel = this.getView().getModel("view") as JSONModel;
-		const token = localStorage.getItem("accessToken");
-
 		const newRequest = oModel.getProperty("/newRequest");
-
-		// Convert dates to the required format
 		newRequest.startDay = this.formatDate(newRequest.startDay);
 		if (newRequest.endDay) {
 			newRequest.endDay = this.formatDate(newRequest.endDay);
 		}
 
 		try {
-			const response = await requestApi.createRequest(newRequest, token);
+			const response = await fetchWithAuth(
+				"http://localhost:4004/request/EplRequests",
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(newRequest),
+				}
+			);
 
-			if (response.status !== 201) {
+			if (!response.ok) {
 				throw new Error("Failed to create leave request");
 			}
 
-			const data = response.data;
-
+			const data = await response.json();
 			const requests = oModel.getProperty("/value");
 			requests.push(data);
-
 			oModel.setProperty("/value", requests);
 
 			MessageBox.success("Leave request created successfully!");
@@ -96,13 +88,12 @@ export default class Main extends BaseController {
 
 			oModel.setProperty("/newRequest", {});
 		} catch (error) {
-			MessageBox.error(
-				error.response.data?.error?.message ||
-					"An error occurred while creating the leave request."
-			);
+			const errorMessage =
+				(error as Error).message ||
+				"An error occurred while creating the leave request.";
+			MessageBox.error(errorMessage);
 		}
 	}
-
 	public onDeleteRequest(oEvent: any): void {
 		const oItem = oEvent
 			.getSource()
@@ -116,13 +107,18 @@ export default class Main extends BaseController {
 			onClose: async (sAction: any) => {
 				if (sAction === MessageBox.Action.YES) {
 					try {
-						const response = await requestApi.removeRequest(
-							oItem.ID,
-							{ status: "removed" },
-							localStorage.getItem("accessToken")
+						const response = await fetchWithAuth(
+							`http://localhost:4004/request/EplRequests/${oItem.ID}`,
+							{
+								headers: {
+									"Content-Type": "application/json",
+								},
+								method: "PATCH",
+								body: JSON.stringify({ status: "removed" }),
+							}
 						);
 
-						if (response.status !== 200) {
+						if (!response.ok) {
 							throw new Error("Failed to delete leave request");
 						}
 
@@ -133,10 +129,10 @@ export default class Main extends BaseController {
 
 						MessageBox.success("Leave request deleted successfully!");
 					} catch (error) {
-						MessageBox.error(
-							error.response.data?.error?.message ||
-								"An error occurred while creating the leave request."
-						);
+						const errorMessage =
+							(error as Error).message ||
+							"An error occurred while deleting the leave request.";
+						MessageBox.error(errorMessage);
 					}
 				}
 			},
@@ -206,25 +202,28 @@ export default class Main extends BaseController {
 		}
 
 		try {
-			const response = await requestApi.updateRequest(
-				currentRequest.ID,
-				currentRequest,
-				localStorage.getItem("accessToken")
+			const response = await fetchWithAuth(
+				`http://localhost:4004/request/EplRequests/${currentRequest.ID}`,
+				{
+					method: "PUT",
+					headers: {
+						"Content-Type": "application/json",
+					},
+					body: JSON.stringify(currentRequest),
+				}
 			);
 
-			if (response.status !== 200) {
+			if (!response.ok) {
 				throw new Error("Failed to update leave request");
 			}
 
-			const updatedData = response.data;
-
+			const updatedData = await response.json();
 			const requests = oModel.getProperty("/value").map((request: any) => {
 				if (request.ID === updatedData.ID) {
 					return updatedData;
 				}
 				return request;
 			});
-
 			oModel.setProperty("/value", requests);
 
 			MessageBox.success("Leave request updated successfully!");
@@ -240,7 +239,6 @@ export default class Main extends BaseController {
 			MessageBox.error(errorMessage);
 		}
 	}
-
 	private formatDate(date: string): string {
 		const dateObj = new Date(date);
 		const year = dateObj.getFullYear();
@@ -249,21 +247,5 @@ export default class Main extends BaseController {
 		return `${year}-${month}-${day}`;
 	}
 
-	private async onNotificationPress(): Promise<void> {
-		const popover = this.byId("notificationPopover");
-		if (popover) {
-			const popoverDomRef = popover.getDomRef();
-			if (
-				popoverDomRef.style.display === "none" ||
-				popoverDomRef.style.display === ""
-			) {
-				popoverDomRef.style.display = "block";
-				void await this.loadNotifications();
-			} else {
-				popoverDomRef.style.display = "none";
-			}
-		} else {
-			console.error("Popover not found");
-		}
-	}
+	
 }

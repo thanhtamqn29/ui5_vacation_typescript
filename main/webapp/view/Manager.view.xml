@@ -1,11 +1,57 @@
-<mvc:View
+<mvc:View xmlns:tnt="sap.tnt"
     controllerName="myapp.controller.Manager"
     xmlns="sap.m"
     xmlns:mvc="sap.ui.core.mvc"
     displayBlock="true">
-    <App>
-        <pages>
-            <Page title="Manager page">
+    <ScrollContainer vertical="true" height="100%">
+    <tnt:ToolHeader >
+        <Title text="Manage Request" wrapping="false">
+            <layoutData>
+                <OverflowToolbarLayoutData priority="Disappear"/>
+            </layoutData>
+        </Title>
+        <ToolbarSpacer />
+        <Button
+            icon="sap-icon://bell"
+            press="onNotificationPress"
+        >
+            <customData>
+                <BadgeCustomData
+                        animation="Update"
+
+                    key="badge"
+                    value="{= ${view>/totalNotifications} ? ${view>/totalNotifications} : '0'}"
+                />
+            </customData>
+        </Button>
+        <Avatar
+            initials="JD"
+            displaySize="Custom"
+            press="onProfilePress"
+            customDisplaySize="2rem"
+        />
+        <Popover
+            class="notificationPopover"
+            id="notificationPopover"
+            title="Notifications"
+            contentWidth="500px"
+            contentHeight="350px"
+            verticalScrolling="true"
+        
+        >
+            <NotificationList items="{view>/notifications}">
+                <NotificationListItem
+                    description="{view>message}"
+                    unread="{view>unread}"
+                    press=".onListItemPress"
+                    truncate="true"
+
+                >
+                </NotificationListItem>
+            </NotificationList>
+            </Popover>
+    </tnt:ToolHeader>
+      
                 <content>
                     <Table id="requestsTable" items="{path: 'view>/value'}">
                         <columns>
@@ -59,10 +105,15 @@
                                     <Text text="{view>isOutOfDay}" />
                                     <Text text="{view>comment}" />
                                     <Text text="{view>shift}" />
-                                    <HBox>
-                                        <Button icon="sap-icon://accept"  type="Transparent" press="onAccepted" />
-                                        <Button icon="sap-icon://decline" type="Transparent" press="onReject" />
-                                    </HBox>
+                                  <HBox>
+    <Button icon="sap-icon://accept" type="Accept" press="onAccepted" />
+    <Button icon="sap-icon://decline" type="Reject" press="onReject">
+        <layoutData>
+            <FlexItemData styleClass="sapUiTinyMarginBegin" />
+        </layoutData>
+    </Button>
+</HBox>
+
                                 </cells>
                             </ColumnListItem>
                         </items>
@@ -78,7 +129,6 @@
                         </VBox>
                     </Dialog>
                 </content>
-            </Page>
-        </pages>
-    </App>
+    </ScrollContainer>
+         
 </mvc:View>

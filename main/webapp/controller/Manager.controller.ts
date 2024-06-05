@@ -4,16 +4,31 @@ import JSONModel from "sap/ui/model/json/JSONModel";
 import Dialog from "sap/m/Dialog";
 import TextArea from "sap/m/TextArea";
 import requestApi from "myapp/api/mg-request";
+import { notificationApi } from "myapp/api/notificationApi";
 
 export default class Manager extends BaseController {
 	public onInit(): void {
 		const oViewModel = new JSONModel({
 			value: [],
+			notifications: [],
+			totalNotifications: "0",
 		});
 		this.getView().setModel(oViewModel, "view");
 		void this.loadRequests();
+		void this.loadNotifications();
 	}
+	private async loadNotifications(): Promise<void> {
+		const { data, status } = await notificationApi.getNotificationsMng(
+			localStorage.getItem("accessToken")
+		);
+		if (status !== 200) throw new Error("Failed to create leave request");
 
+		console.log(data);
+
+		const oModel = this.getView().getModel("view") as JSONModel;
+		oModel.setProperty("/notifications", data.value);
+		oModel.setProperty("/totalNotifications", data.value.length);
+	}
 	private async loadRequests(): Promise<void> {
 		try {
 			const { data, status } = await requestApi.getRequests(
@@ -90,11 +105,36 @@ export default class Manager extends BaseController {
 			if (response.status !== 200) {
 				throw new Error(`Failed to ${action} request`);
 			}
+			MessageBox.success(`Request has ben ${action} successfully`);
+			
+			const oDialog = this.byId("commentDialog") as Dialog;
+			oDialog.close();
+			void this.loadRequests();
 		} catch (error) {
 			MessageBox.error(
 				error.response.data?.error?.message ||
 					"An error occurred while creating the leave request."
 			);
+			const oDialog = this.byId("commentDialog") as Dialog;
+			oDialog.close();
+			void this.loadRequests();
+		}
+	}
+	private async onNotificationPress(): Promise<void> {
+		const popover = this.byId("notificationPopover");
+		if (popover) {
+			const popoverDomRef = popover.getDomRef();
+			if (
+				popoverDomRef.style.display === "none" ||
+				popoverDomRef.style.display === ""
+			) {
+				popoverDomRef.style.display = "block";
+				void await this.loadNotifications();
+			} else {
+				popoverDomRef.style.display = "none";
+			}
+		} else {
+			console.error("Popover not found");
 		}
 	}
 }

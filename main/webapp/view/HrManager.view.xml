@@ -1,30 +1,78 @@
-<mvc:View
+<mvc:View xmlns:uxap="sap.uxap"
     controllerName="myapp.controller.HrManager"
     xmlns:mvc="sap.ui.core.mvc"
-     xmlns:core="sap.ui.core"
-    xmlns="sap.m">
-   <Page title="Employee Leave Requests">
-        
-        <content>
-            <VBox class="sapUiSmallMargin">
-<HBox>
-    <SearchField
-        id="searchName"
-        placeholder="Search by Name"
-        search="onSearch"/>
-    <ComboBox
-        id="searchDepartment"
-        placeholder="Select Department"
-        selectionChange="onSearch">
-        <items>
-            
-        </items>
-    </ComboBox>
-     <DatePicker
-        id="searchDate"
-        placeholder="Select Date"
-        change="onSearch" />
-</HBox>
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+>
+<Page  title="HR Page" >
+    <customHeader>
+                <Bar>               
+                    
+                    <contentRight>
+                    <Button
+                            icon="sap-icon://bell"
+                            press="onNotificationPress"
+                        >
+                            <customData>
+                                <BadgeCustomData
+                                    key="badge"
+                                    value="2"
+                                />
+                            </customData>
+                        </Button>
+                        <Avatar
+                            initials="JD"
+                            displaySize="Custom"
+                            press="onProfilePress"
+                            customDisplaySize="2rem"
+                        />
+                    </contentRight>
+                </Bar>
+            </customHeader>
+            <content>
+                <VBox class="sapUiSmallMargin">
+                    <HBox>
+                        <Toolbar>
+                            <SearchField
+                                id="searchName"
+                                placeholder="Search by Name"
+                                search="onSearch"
+                            />
+                            <ToolbarSpacer />
+                            <ComboBox
+                                id="searchDepartment"
+                                placeholder="Select Department"
+                                selectionChange="onSearch"
+                            >
+                                <items />
+                            </ComboBox>
+                            <ToolbarSpacer />
+                            <DatePicker
+                                id="searchDate"
+                                placeholder="Select Date"
+                                change="onSearch"
+                            />
+                            <ToolbarSpacer />
+                            <MenuButton
+                                text="Export"
+                                icon="sap-icon://action"
+                                menu="{ path: 'menuModel>/items', templateShareable: true }"
+                            >
+                                <menu>
+                                    <Menu itemSelected="onMenuAction">
+                                        <MenuItem
+                                            text="Export as PDF"
+                                            icon="sap-icon://pdf-attachment"
+                                        />
+                                        <MenuItem
+                                            text="Export to Excel"
+                                            icon="sap-icon://excel-attachment"
+                                        />
+                                    </Menu>
+                                </menu>
+                            </MenuButton>
+                        </Toolbar>
+                    </HBox>
 
                 <Table
                     id="leaveRequestsTable"
