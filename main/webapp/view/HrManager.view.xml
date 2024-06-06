@@ -1,0 +1,160 @@
+<mvc:View xmlns:tnt="sap.tnt" xmlns:uxap="sap.uxap"
+    controllerName="myapp.controller.HrManager"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+    xmlns="sap.m"
+>
+    <ScrollContainer vertical="true" height="100%">
+        <tnt:ToolHeader>
+         <Title text="Human Resource Department" wrapping="false">
+                <layoutData>
+                    <OverflowToolbarLayoutData priority="Disappear"/>
+                </layoutData>
+            </Title>
+            <ToolbarSpacer />
+            <Button
+                icon="sap-icon://bell"
+                press="onNotificationPress"
+            >
+                <customData>
+                    <BadgeCustomData
+                            animation="Update"
+
+                        key="badge"
+                        value="{= ${view>/totalNotifications} ? ${view>/totalNotifications} : '0'}"
+                    />
+                </customData>
+            </Button>
+            <Avatar
+                initials="JD"
+                displaySize="Custom"
+                press="onProfilePress"
+                customDisplaySize="2rem"
+            />
+            <Popover
+                class="notificationPopover"
+                id="notificationPopover"
+                title="Notifications"
+                contentWidth="500px"
+                contentHeight="350px"
+                verticalScrolling="true"
+            
+            >
+            <NotificationList items="{view>/notifications}">
+                        <NotificationListItem
+                            description="{view>message}"
+                            unread="{view>unread}"
+                            press=".onListItemPress"
+                            truncate="true"
+                        >
+                        </NotificationListItem>
+                    </NotificationList>
+                </Popover>
+        </tnt:ToolHeader>
+          <VBox class="sapUiSmallMargin">
+            <HBox>
+                <Toolbar>
+                    <SearchField
+                        id="searchName"
+                        placeholder="Search by Name"
+                        search="onSearch"
+                    />
+                    <ToolbarSpacer />
+                    <ComboBox
+                        id="searchDepartment"
+                        placeholder="Select Department"
+                        selectionChange="onSearch"
+                    >
+                        <items />
+                    </ComboBox>
+                    <ToolbarSpacer />
+                    <DatePicker
+                        id="searchDate"
+                        placeholder="Select Date"
+                        change="onSearch"
+                    />
+                    <ToolbarSpacer />
+                    <MenuButton
+                        text="Export"
+                        icon="sap-icon://action"
+                        menu="{ path: 'menuModel>/items', templateShareable: true }"
+                    >
+                        <menu>
+                            <Menu itemSelected="onMenuAction">
+                                <MenuItem
+                                    text="Export as PDF"
+                                    icon="sap-icon://pdf-attachment"
+                                />
+                                <MenuItem
+                                    text="Export to Excel"
+                                    icon="sap-icon://excel-attachment"
+                                />
+                            </Menu>
+                        </menu>
+                    </MenuButton>
+                </Toolbar>
+            </HBox>
+            <Table
+                id="leaveRequestsTable"
+                items="{path: 'view>/value'}">
+                <columns>
+                    <Column>
+                        <Text text="Request ID" />
+                    </Column>
+                    <Column>
+                        <Text text="Type" />
+                    </Column>
+                        <Column>
+                        <Text text="Full Name" />
+                    </Column>
+                        <Column>
+                        <Text text="Department Name" />
+                    </Column>
+                    <Column>
+                        <Text text="Reason" />
+                    </Column>
+                    <Column>
+                        <Text text="Status" />
+                    </Column>
+                    <Column>
+                        <Text text="Start Day" />
+                    </Column>
+                    <Column>
+                        <Text text="End day" />
+                    </Column>
+                    <Column>
+                        <Text text="Is out of Day" />
+                    </Column>
+                    <Column>
+                        <Text text="Comment" />
+                    </Column>
+                    <Column>
+                        <Text text="Shift" />
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem>
+                        <cells>
+                            <Text text="{view>request_ID}" />
+                            <Text text="{view>dayOffType}" />
+                            <Text text="{view>fullName}" />
+                            <Text text="{view>departmentName}" />
+                            <Text text="{view>reason}" />
+                            <Text text="{view>request_status}" />
+                            <Text text="{view>startDay}" />
+                            <Text text="{view>endDay}" />
+                                <Text text="{view>isOutOfDay}" />
+                                <Text text="{view>comment}" />
+                            <Text text="{view>shift}" />								
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </VBox>
+    
+    </ScrollContainer>
+
+        
+          
+
+</mvc:View>

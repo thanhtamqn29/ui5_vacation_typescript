@@ -1,0 +1,11 @@
+<mvc:View xmlns:launchpad="sap.ushell.ui.launchpad" xmlns:layout="sap.ui.layout" xmlns:form="sap.ui.layout.form"
+    controllerName="myapp.controller.Login"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns="sap.m">
+      <FlexBox justifyContent="Center" alignItems="Center" height="100%">
+        <items>
+            <BusyIndicator  size="1.8rem" visible="true" text="Waiting for our system define who you are..." />
+        </items>
+    </FlexBox>
+
+</mvc:View>

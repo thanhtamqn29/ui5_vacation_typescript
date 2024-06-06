@@ -1,0 +1,330 @@
+<mvc:View xmlns:tnt="sap.tnt"
+    controllerName="myapp.controller.Main"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
+>
+
+    <ScrollContainer vertical="true" height="100%">
+        <tnt:ToolHeader class="header-container">
+            <Title text="My Leave Request" wrapping="false">
+				<layoutData>
+					<OverflowToolbarLayoutData priority="Disappear"/>
+				</layoutData>
+			</Title>
+            <ToolbarSpacer />
+            <Button
+                icon="sap-icon://bell"
+                press="onNotificationPress"
+            >
+                <customData>
+                    <BadgeCustomData
+                        animation="Update"
+                        key="badge"
+                        value="{= ${view>/totalNotifications} ? ${view>/totalNotifications} : '0'}"
+                    />
+                </customData>
+            </Button>
+            <Avatar
+                initials="JD"
+                displaySize="Custom"
+                press="onProfilePress"
+                customDisplaySize="2rem"
+            />
+            <Popover
+                class="notificationPopover"
+                id="notificationPopover"
+                title="Notifications"
+                contentWidth="500px"
+                contentHeight="350px"
+                verticalScrolling="true"
+            >
+                <NotificationList items="{view>/notifications}">
+                    <NotificationListItem
+                        description="{view>message}"
+                        unread="{view>unread}"
+                        press=".onListItemPress"
+                        truncate="true"
+                    >
+                    </NotificationListItem>
+                </NotificationList>
+            </Popover>
+        </tnt:ToolHeader>
+           
+        <VBox class="sapUiSmallMargin">
+            <Button
+                text="Create Request"
+                press="onCreateRequestPress"
+                class="myCreateButton"
+                type="Emphasized"
+            />
+            <Table
+                id="leaveRequestsTable"
+                items="{path: 'view>/value'}"
+            >
+                <columns>
+                    <Column>
+                        <Text text="ID" />
+                    </Column>
+                    <Column>
+                        <Text text="DAY_OFF TYPE" />
+                    </Column>
+                    <Column>
+                        <Text text="REASON" />
+                    </Column>
+                    <Column>
+                        <Text text="STATUS" />
+                    </Column>
+                    <Column>
+                        <Text text="START_DAY" />
+                    </Column>
+                    <Column>
+                        <Text text="END_DAY" />
+                    </Column>
+                    <Column>
+                        <Text text="IS_OUTOFDAY" />
+                    </Column>
+                    <Column>
+                        <Text text="COMMENT" />
+                    </Column>
+                    <Column>
+                        <Text text="SHIFT" />
+                    </Column>
+                    <Column>
+                        <Text text="ACTION" />
+                    </Column>
+                </columns>
+                <items>
+                    <ColumnListItem>
+                        <cells>
+                            <Text text="{view>ID}" />
+                            <Text text="{view>dayOffType}" />
+                            <Text text="{view>reason}" />
+                            <Text text="{view>status}" />
+                            <Text text="{view>startDay}" />
+                            <Text text="{view>endDay}" />
+                            <Text text="{view>isOutOfDay}" />
+                            <Text text="{view>comment}" />
+                            <Text text="{view>shift}" />
+                            <HBox>
+                                <Button
+                                    icon="sap-icon://edit"
+                                    type="Transparent"
+                                    press="onEditRequest"
+                                />
+                                <Button
+                                    icon="sap-icon://delete"
+                                    type="Reject"
+                                    press="onDeleteRequest"
+                                />
+                            </HBox>
+                        </cells>
+                    </ColumnListItem>
+                </items>
+            </Table>
+        </VBox>
+
+        <Dialog
+            id="createRequestDialog"
+            title="Create New Leave Request"
+            class="sapUiContentPadding"
+            stretch="false"
+        >
+            <VBox>
+                <Label
+                    text="Reason"
+                    labelFor="reasonInput"
+                />
+                <Input
+                    id="reasonInput"
+                    value="{view>/newRequest/reason}"
+                />
+
+                <Label
+                    text="Day Off Type"
+                    labelFor="dayOffTypeSelect"
+                />
+                <Select
+                    id="dayOffTypeSelect"
+                    selectedKey="{view>/newRequest/dayOffType}"
+                    change="onDayOffTypeChange"
+                >
+                    <core:Item
+                        key=""
+                        text="Select Day Off Type"
+                    />
+                    <core:Item
+                        key="FULL_DAY"
+                        text="Full Day"
+                    />
+                    <core:Item
+                        key="HALF_DAY"
+                        text="Half Day"
+                    />
+                    <core:Item
+                        key="PERIOD_TIME"
+                        text="Period Time"
+                    />
+                </Select>
+
+                <Label
+                    text="Start Day"
+                    labelFor="startDayInput"
+                    visible="{= ${view>/newRequest/dayOffType} === 'HALF_DAY' || ${view>/newRequest/dayOffType} === 'PERIOD_TIME' || ${view>/newRequest/dayOffType} === 'FULL_DAY' }"
+                />
+                <DatePicker
+                    id="startDayInput"
+                    value="{view>/newRequest/startDay}"
+                    visible="{= ${view>/newRequest/dayOffType} === 'HALF_DAY' || ${view>/newRequest/dayOffType} === 'PERIOD_TIME' || ${view>/newRequest/dayOffType} === 'FULL_DAY' }"
+                />
+
+                <Label
+                    text="Leave Period"
+                    labelFor="leavePeriodSelect"
+                    visible="{= ${view>/newRequest/dayOffType} === 'HALF_DAY'}"
+                />
+                <Select
+                    id="leavePeriodSelect"
+                    selectedKey="{view>/newRequest/shift}"
+                    visible="{= ${view>/newRequest/dayOffType} === 'HALF_DAY'}"
+                >
+                    <core:Item
+                        key=""
+                        text="Select Shift"
+                    />
+                    <core:Item
+                        key="MORNING"
+                        text="Morning"
+                    />
+                    <core:Item
+                        key="AFTERNOON"
+                        text="Afternoon"
+                    />
+                </Select>
+
+                <Label
+                    text="End Day"
+                    labelFor="endDayInput"
+                    visible="{= ${view>/newRequest/dayOffType} === 'PERIOD_TIME'}"
+                />
+                <DatePicker
+                    id="endDayInput"
+                    value="{view>/newRequest/endDay}"
+                    visible="{= ${view>/newRequest/dayOffType} === 'PERIOD_TIME'}"
+                />
+            </VBox>
+            <buttons>
+                <Button
+                    text="Cancel"
+                    press="onCancelCreateRequest"
+                />
+                <Button
+                    text="Create"
+                    press="onCreateRequest"
+                    type="Accept"
+                />
+            </buttons>
+        </Dialog>
+
+        <Dialog
+            id="updateRequestDialog"
+            title="Update Leave Request"
+            class="sapUiContentPadding"
+            stretch="false"
+        >
+            <VBox>
+                <Label
+                    text="Reason"
+                    labelFor="updateReasonInput"
+                />
+                <Input
+                    id="updateReasonInput"
+                    value="{view>/currentRequest/reason}"
+                />
+
+                <Label
+                    text="Day Off Type"
+                    labelFor="updateDayOffTypeSelect"
+                />
+                <Select
+                    id="updateDayOffTypeSelect"
+                    selectedKey="{view>/currentRequest/dayOffType}"
+                    change="onUpdateDayOffTypeChange"
+                >
+                    <core:Item
+                        key=""
+                        text="Select Day Off Type"
+                    />
+                    <core:Item
+                        key="FULL_DAY"
+                        text="Full Day"
+                    />
+                    <core:Item
+                        key="HALF_DAY"
+                        text="Half Day"
+                    />
+                    <core:Item
+                        key="PERIOD_TIME"
+                        text="Period Time"
+                    />
+                </Select>
+
+                <Label
+                    text="Start Day"
+                    labelFor="updateStartDayInput"
+                />
+                <DatePicker
+                    id="updateStartDayInput"
+                    value="{view>/currentRequest/startDay}"
+                />
+
+                <Label
+                    text="Leave Period"
+                    labelFor="updateLeavePeriodSelect"
+                    visible="{= ${view>/currentRequest/dayOffType} === 'HALF_DAY'}"
+                />
+                <Select
+                    id="updateLeavePeriodSelect"
+                    selectedKey="{view>/currentRequest/shift}"
+                    visible="{= ${view>/currentRequest/dayOffType} === 'HALF_DAY'}"
+                >
+                    <core:Item
+                        key=""
+                        text="Select Shift"
+                    />
+                    <core:Item
+                        key="MORNING"
+                        text="Morning"
+                    />
+                    <core:Item
+                        key="AFTERNOON"
+                        text="Afternoon"
+                    />
+                </Select>
+
+                <Label
+                    text="End Day"
+                    labelFor="updateEndDayInput"
+                    visible="{= ${view>/currentRequest/dayOffType} === 'PERIOD_TIME'}"
+                />
+                <DatePicker
+                    id="updateEndDayInput"
+                    value="{view>/currentRequest/endDay}"
+                    visible="{= ${view>/currentRequest/dayOffType} === 'PERIOD_TIME'}"
+                />
+            </VBox>
+            <buttons>
+                <Button
+                    text="Cancel"
+                    press="onCancelUpdateRequest"
+                />
+                <Button
+                    text="Update"
+                    press="onUpdateRequest"
+                    type="Accept"
+                />
+            </buttons>
+        </Dialog>
+    </ScrollContainer>
+   
+</mvc:View>

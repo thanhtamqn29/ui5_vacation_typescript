@@ -1,0 +1,12 @@
+.notificationPopover {
+    position: relative;  
+    z-index: 1;
+    top: 50px;
+    right: 1%;
+    display: none;
+}
+
+.notification-item {
+    max-width: 200px;
+    word-wrap: break-word;
+}

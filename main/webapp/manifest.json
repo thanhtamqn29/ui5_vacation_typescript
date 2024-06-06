@@ -34,7 +34,8 @@
 			"minUI5Version": "1.124.0",
 			"libs": {
 				"sap.ui.core": {},
-				"sap.m": {}
+				"sap.m": {},
+				"sap.tnt": {}
 			}
 		},
 
@@ -64,44 +65,44 @@
 				"async": true
 			},
 			"routes": [
-                {
-                    "pattern": "",
-                    "name": "login",
-                    "target": "login"
-                },
-                {
-                    "pattern": "Main",
-                    "name": "main", 
-                    "target": "main"
-                },
 				{
-                    "pattern": "Manager",
-                    "name": "manager", 
-                    "target": "manager"
-                },
+					"pattern": "",
+					"name": "login",
+					"target": "login"
+				},
 				{
-                    "pattern": "HrManager",
-                    "name": "hrManager", 
-                    "target": "hrManager"
-                }
-            ],
-            "targets": {
-                "login": {
-                    "viewName": "Login"
-                },
-                "main": {
-                    "viewName": "Main", 
-                    "viewId": "main"
-                },
+					"pattern": "Main",
+					"name": "main",
+					"target": "main"
+				},
+				{
+					"pattern": "Manager",
+					"name": "manager",
+					"target": "manager"
+				},
+				{
+					"pattern": "HrManager",
+					"name": "hrManager",
+					"target": "hrManager"
+				}
+			],
+			"targets": {
+				"login": {
+					"viewName": "Login"
+				},
+				"main": {
+					"viewName": "Main",
+					"viewId": "main"
+				},
 				"manager": {
-                    "viewName": "Manager", 
-                    "viewId": "Manager"
-                },
+					"viewName": "Manager",
+					"viewId": "Manager"
+				},
 				"hrManager": {
-                    "viewName": "HrManager", 
-                    "viewId": "hrManager"
-                }
-            }
+					"viewName": "HrManager",
+					"viewId": "hrManager"
+				}
+			}
 		}
 	}
 }
