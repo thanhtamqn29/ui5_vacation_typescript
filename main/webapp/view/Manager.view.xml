@@ -4,55 +4,54 @@
     xmlns:mvc="sap.ui.core.mvc"
     displayBlock="true">
     <ScrollContainer vertical="true" height="100%">
-    <tnt:ToolHeader >
-        <Title text="Manage Request" wrapping="false">
-            <layoutData>
-                <OverflowToolbarLayoutData priority="Disappear"/>
-            </layoutData>
-        </Title>
-        <ToolbarSpacer />
-        <Button
-            icon="sap-icon://bell"
-            press="onNotificationPress"
-        >
-            <customData>
-                <BadgeCustomData
-                        animation="Update"
+        <tnt:ToolHeader >
+            <Title text="Manage Request" wrapping="false">
+                <layoutData>
+                    <OverflowToolbarLayoutData priority="Disappear"/>
+                </layoutData>
+            </Title>
+            <ToolbarSpacer />
+            <Button
+                icon="sap-icon://bell"
+                press="onNotificationPress"
+            >
+                <customData>
+                    <BadgeCustomData
+                            animation="Update"
 
-                    key="badge"
-                    value="{= ${view>/totalNotifications} ? ${view>/totalNotifications} : '0'}"
-                />
-            </customData>
-        </Button>
-        <Avatar
-            initials="JD"
-            displaySize="Custom"
-            press="onProfilePress"
-            customDisplaySize="2rem"
-        />
-        <Popover
-            class="notificationPopover"
-            id="notificationPopover"
-            title="Notifications"
-            contentWidth="500px"
-            contentHeight="350px"
-            verticalScrolling="true"
-        
-        >
+                        key="badge"
+                        value="{= ${view>/totalNotifications} ? ${view>/totalNotifications} : '0'}"
+                    />
+                </customData>
+            </Button>
+            <Avatar
+                initials="JD"
+                displaySize="Custom"
+                press="onProfilePress"
+                customDisplaySize="2rem"
+            />
+            <Popover
+                class="notificationPopover"
+                id="notificationPopover"
+                title="Notifications"
+                contentWidth="500px"
+                contentHeight="350px"
+                verticalScrolling="true"
+            
+            >
             <NotificationList items="{view>/notifications}">
-                <NotificationListItem
-                    description="{view>message}"
-                    unread="{view>unread}"
-                    press=".onListItemPress"
-                    truncate="true"
-
-                >
-                </NotificationListItem>
-            </NotificationList>
-            </Popover>
-    </tnt:ToolHeader>
+                        <NotificationListItem
+                            description="{view>message}"
+                            unread="{view>unread}"
+                            press=".onListItemPress"
+                            truncate="true"
+                        >
+                        </NotificationListItem>
+                    </NotificationList>
+                </Popover>
+        </tnt:ToolHeader>
       
-                <content>
+      
                     <Table id="requestsTable" items="{path: 'view>/value'}">
                         <columns>
                              <Column>
@@ -63,9 +62,6 @@
                         </Column>
                           <Column>
                             <Text text="Full Name" />
-                        </Column>
-                          <Column>
-                            <Text text="Department Name" />
                         </Column>
                         <Column>
                             <Text text="Reason" />
@@ -128,7 +124,7 @@
                             </HBox>
                         </VBox>
                     </Dialog>
-                </content>
+        
     </ScrollContainer>
          
 </mvc:View>

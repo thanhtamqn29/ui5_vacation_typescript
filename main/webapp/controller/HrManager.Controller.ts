@@ -22,12 +22,14 @@ export default class HrManager extends BaseController {
 
 	private async loadRequests(): Promise<void> {
 		try {
-			const { data, status } = await requestApi.getRequests(localStorage.getItem("accessToken"));
+			const { data, status } = await requestApi.getRequests(
+				localStorage.getItem("accessToken")
+			);
 
 			if (status !== 200) {
 				throw new Error("Failed to fetch leave requests");
 			}
-            
+
 			const oModel = this.getView().getModel("view") as JSONModel;
 			oModel.setProperty("/value", data.value);
 		} catch (error) {
@@ -111,47 +113,51 @@ export default class HrManager extends BaseController {
 			.getBinding("items") as ListBinding;
 		oBinding.filter(aFilters);
 	}
-    public onMenuAction(oEvent: any): void {
-        const oItem = oEvent.getParameter("item");
-        const sItemText = oItem.getText();
+	public onMenuAction(oEvent: any): void {
+		const oItem = oEvent.getParameter("item");
+		const sItemText = oItem.getText();
 
-        if (sItemText === "Export to Excel") {
-            this.exportToExcel();
-        } else if (sItemText === "Export as PDF") {
-            MessageBox.show("PDF export is not implemented yet.");
-        }
-    }
+		if (sItemText === "Export to Excel") {
+			this.exportToExcel();
+		} else if (sItemText === "Export as PDF") {
+			MessageBox.show("PDF export is not implemented yet.");
+		}
+	}
 
-    private async exportToExcel(): Promise<void> {
-        const sUrl = "http://localhost:4004/manage/manageHr/exportExcel()";
-        
-        await fetchWithAuth(sUrl, {
-            method: 'GET'
-        })
-        .then(response => {
-            console.log(response);
-            
-            if (!response.ok) {
-                throw new Error('Failed to export to Excel.');
-            }
-           
-            return response.blob();
-        })
-        .then(blob => {
-        
-            
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'Report.xlsx'; 
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-        })
-        .catch(error => {
-            MessageBox.error(error.message || 'An error occurred while exporting to Excel.');
-        });
-    }
+	private async exportToExcel(): Promise<void> {
+		try {
+			const response = await requestApi.exportExcel(localStorage.getItem("accessToken"));
+	
+			if (response.status !== 200) {
+				throw new Error("Failed to export to Excel.");
+			}
+			console.log(response.data);
+			
+			// Assuming response.data is of type ArrayBuffer
+			const blob =  new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+	
+			const url = window.URL.createObjectURL(blob);
+			const a = document.createElement("a");
+			a.href = url;
+			a.download = "Report.xlsx";
+			document.body.appendChild(a);
+			a.click();
+			a.remove();
+	
+			// Optionally, you can revoke the object URL after use to free up memory
+			window.URL.revokeObjectURL(url);
+	
+		} catch (error) {
+			console.error(error);
+	
+			// Uncomment and customize the error message as needed
+			// if (error.response && error.response.data && error.response.data.error && error.response.data.error.message) {
+			//     MessageBox.error(error.response.data.error.message);
+			// } else {
+			//     MessageBox.error("An error occurred while exporting to Excel.");
+			// }
+		}
+	}
 	private formatDate(date: string): string {
 		const dateObj = new Date(date);
 		const year = dateObj.getFullYear();

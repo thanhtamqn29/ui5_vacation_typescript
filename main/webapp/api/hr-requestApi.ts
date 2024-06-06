@@ -15,4 +15,12 @@ export const requestApi = {
 			},
 		});
 	},
+	exportExcel: async (token: string) => {
+		return await facilities.get("manage/manageHr/exportExcel()", {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+			responseType: 'blob'
+		});
+	},
 };

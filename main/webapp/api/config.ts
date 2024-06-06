@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig } from "axios";
 
-const url = "http://localhost:4004";
+const url = "https://vacation-approuter-kind-panther-xa.cfapps.us10-001.hana.ondemand.com";
 
 export const facilities = {
 	get: async (srv: string, config?: AxiosRequestConfig) => {

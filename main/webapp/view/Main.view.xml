@@ -1,10 +1,8 @@
 <mvc:View xmlns:tnt="sap.tnt"
-    xmlns:mvc="sap.ui.core.mvc"
-    xmlns="sap.m"
-    xmlns:core="sap.ui.core"
     controllerName="myapp.controller.Main"
-    xmlns:l="sap.ui.layout"
-    xmlns:html="http://www.w3.org/1999/xhtml"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:core="sap.ui.core"
 >
 
     <ScrollContainer vertical="true" height="100%">
@@ -15,8 +13,6 @@
 				</layoutData>
 			</Title>
             <ToolbarSpacer />
-                       
-
             <Button
                 icon="sap-icon://bell"
                 press="onNotificationPress"
@@ -40,9 +36,8 @@
                 id="notificationPopover"
                 title="Notifications"
                 contentWidth="500px"
-                 contentWidth="500px"
-            contentHeight="350px"
-            verticalScrolling="true"
+                contentHeight="350px"
+                verticalScrolling="true"
             >
                 <NotificationList items="{view>/notifications}">
                     <NotificationListItem
@@ -50,7 +45,6 @@
                         unread="{view>unread}"
                         press=".onListItemPress"
                         truncate="true"
-
                     >
                     </NotificationListItem>
                 </NotificationList>
