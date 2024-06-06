@@ -5,6 +5,12 @@ import Dialog from "sap/m/Dialog";
 import TextArea from "sap/m/TextArea";
 import requestApi from "myapp/api/mg-request";
 import { notificationApi } from "myapp/api/notificationApi";
+import { fetchWithAuth } from "myapp/utils/fetchWithAuth";
+import StandardListItem from "sap/m/StandardListItem";
+import Filter from "sap/ui/model/Filter";
+import SelectDialog from "sap/m/SelectDialog";
+import FilterOperator from "sap/ui/model/FilterOperator";
+import ListBinding from "sap/ui/model/ListBinding";
 
 export default class Manager extends BaseController {
 	public onInit(): void {
@@ -12,10 +18,60 @@ export default class Manager extends BaseController {
 			value: [],
 			notifications: [],
 			totalNotifications: "0",
+			department: [],
 		});
 		this.getView().setModel(oViewModel, "view");
+		const oUserModel = new JSONModel({
+			value: [],
+		});
+		this.getView().setModel(oUserModel, "user");
+
+		const oDepUserModel = new JSONModel({
+			value: [],
+		});
+		this.getView().setModel(oDepUserModel, "depUser");
+
+		void this.loadUser();
+		void this.loadDepartment();
 		void this.loadRequests();
 		void this.loadNotifications();
+	}
+	private async loadUser(): Promise<void> {
+		try {
+			const { data, status } = await requestApi.getUsers(
+				localStorage.getItem("accessToken")
+			);
+
+			if (status !== 200) {
+				throw new Error("Failed to fetch leave requests");
+			}
+			const oModel = this.getView().getModel("user") as JSONModel;
+			oModel.setProperty("/value", data.value);
+		} catch (error) {
+			MessageBox.error(
+				error.response.data?.error?.message ||
+					"An error occurred while creating the leave request."
+			);
+		}
+	}
+	private async loadDepartment(): Promise<void> {
+		try {
+			const { data, status } = await requestApi.getDepartment(
+				localStorage.getItem("accessToken")
+			);
+
+			if (status !== 200) {
+				throw new Error("Failed to fetch leave requests");
+			}
+
+			const oModel = this.getView().getModel("view") as JSONModel;
+			oModel.setProperty("/department", data.value);
+		} catch (error) {
+			MessageBox.error(
+				error.response.data?.error?.message ||
+					"An error occurred while creating the leave request."
+			);
+		}
 	}
 	private async loadNotifications(): Promise<void> {
 		const { data, status } = await notificationApi.getNotificationsMng(
@@ -44,10 +100,10 @@ export default class Manager extends BaseController {
 			const oModel = this.getView().getModel("view") as JSONModel;
 			oModel.setProperty("/value", data.value);
 		} catch (error) {
-			const errorMessage =
-				(error as Error).message ||
-				"An error occurred while fetching leave requests.";
-			MessageBox.error(errorMessage);
+			MessageBox.error(
+				error.response.data?.error?.message ||
+					"An error occurred while creating the leave request."
+			);
 		}
 	}
 
@@ -74,7 +130,7 @@ export default class Manager extends BaseController {
 		oDialog.open();
 	}
 
-	public async  onSubmitComment(): Promise<void> {
+	public async onSubmitComment(): Promise<void> {
 		const oDialog = this.byId("commentDialog") as Dialog;
 		const sAction = oDialog.data("action") as string;
 		const sRequestId = oDialog.data("requestId") as string;
@@ -106,7 +162,7 @@ export default class Manager extends BaseController {
 				throw new Error(`Failed to ${action} request`);
 			}
 			MessageBox.success(`Request has ben ${action} successfully`);
-			
+
 			const oDialog = this.byId("commentDialog") as Dialog;
 			oDialog.close();
 			void this.loadRequests();
@@ -120,7 +176,7 @@ export default class Manager extends BaseController {
 			void this.loadRequests();
 		}
 	}
-	private async onNotificationPress(): Promise<void> {
+	public async onNotificationPress(): Promise<void> {
 		const popover = this.byId("notificationPopover");
 		if (popover) {
 			const popoverDomRef = popover.getDomRef();
@@ -129,12 +185,75 @@ export default class Manager extends BaseController {
 				popoverDomRef.style.display === ""
 			) {
 				popoverDomRef.style.display = "block";
-				void await this.loadNotifications();
+				void (await this.loadNotifications());
 			} else {
 				popoverDomRef.style.display = "none";
 			}
 		} else {
 			console.error("Popover not found");
+		}
+	}
+
+	public async onOpenSelectDialog(): Promise<void> {
+		const oSelectDialog = this.byId("userSelectDialog") as SelectDialog;
+
+		try {
+			const { data, status } = await requestApi.getNullDepartmentUser(
+				localStorage.getItem("accessToken")
+			);
+
+			if (status !== 200) throw new Error("Failed to create leave request");
+
+			const oUserModel = this.getView().getModel("depUser") as JSONModel;
+			oUserModel.setProperty("/value", data.value.data);
+
+			oSelectDialog.setModel(oUserModel);
+			oSelectDialog.bindAggregation("items", {
+				path: "depUser>/value",
+				template: new StandardListItem({
+					title: "{depUser>ID}",
+					description: "{depUser>fullName}",
+				}),
+			});
+			oSelectDialog.open("");
+		} catch (error) {
+			MessageBox.error(
+				error.response.data?.error?.message ||
+					"An error occurred while creating the leave request."
+			);
+		}
+	}
+
+	public onSearchUser(oEvent: any): void {
+		const sValue = oEvent.getParameter("value");
+		const oFilter = new Filter("username", FilterOperator.Contains, sValue);
+		const oBinding = oEvent.getSource().getBinding("items") as ListBinding;
+		oBinding.filter([oFilter]);
+	}
+
+	public async onAddUser(oEvent: any): Promise<void> {
+		const oSelectedItem = oEvent.getParameters("selectedItem").selectedItems;
+
+		if (oSelectedItem && oSelectedItem.length > 0) {
+			const aUserIds = oSelectedItem.map((item: any) =>
+				item.getBindingContext("depUser").getProperty("ID")
+			);
+
+			try {
+				const { status } = await requestApi.inviteMembers(
+					{ ids: aUserIds },
+					localStorage.getItem("accessToken")
+				);
+
+				if (status !== 200) throw new Error("Failed to create leave request");
+				MessageBox.success("User added to the department successfully!");
+				await this.loadUser();
+			} catch (error) {
+				MessageBox.error(
+					error.response.data?.error?.message ||
+						"An error occurred while creating the leave request."
+				);
+			}
 		}
 	}
 }

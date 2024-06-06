@@ -33,10 +33,10 @@ export default class HrManager extends BaseController {
 			const oModel = this.getView().getModel("view") as JSONModel;
 			oModel.setProperty("/value", data.value);
 		} catch (error) {
-			const errorMessage =
-				(error as Error).message ||
-				"An error occurred while fetching leave requests.";
-			MessageBox.error(errorMessage);
+			MessageBox.error(
+				error.response.data?.error?.message ||
+					"An error occurred while creating the leave request."
+			);
 		}
 	}
 
@@ -63,10 +63,10 @@ export default class HrManager extends BaseController {
 				);
 			});
 		} catch (error) {
-			const errorMessage =
-				(error as Error).message ||
-				"An error occurred while fetching departments.";
-			MessageBox.error(errorMessage);
+			MessageBox.error(
+				error.response.data?.error?.message ||
+					"An error occurred while creating the leave request."
+			);
 		}
 	}
 
@@ -148,14 +148,10 @@ export default class HrManager extends BaseController {
 			window.URL.revokeObjectURL(url);
 	
 		} catch (error) {
-			console.error(error);
-	
-			// Uncomment and customize the error message as needed
-			// if (error.response && error.response.data && error.response.data.error && error.response.data.error.message) {
-			//     MessageBox.error(error.response.data.error.message);
-			// } else {
-			//     MessageBox.error("An error occurred while exporting to Excel.");
-			// }
+			MessageBox.error(
+				error.response.data?.error?.message ||
+					"An error occurred while creating the leave request."
+			);
 		}
 	}
 	private formatDate(date: string): string {

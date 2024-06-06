@@ -234,10 +234,10 @@ export default class Main extends BaseController {
 				oDialog.close();
 			}
 		} catch (error) {
-			const errorMessage =
-				(error as Error).message ||
-				"An error occurred while updating the leave request.";
-			MessageBox.error(errorMessage);
+			MessageBox.error(
+				error.response.data?.error?.message ||
+					"An error occurred while creating the leave request."
+			);
 		}
 	}
 

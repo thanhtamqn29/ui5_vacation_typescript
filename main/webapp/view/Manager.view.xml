@@ -50,44 +50,52 @@
                     </NotificationList>
                 </Popover>
         </tnt:ToolHeader>
-      
-      
+       <IconTabBar
+                id="iconTabBar1"
+                class="sapUiResponsiveContentPadding"
+            >
+                <items>
+
+        <IconTabFilter
+                        key="info"
+                        text="Manage Request"
+                    >
                     <Table id="requestsTable" items="{path: 'view>/value'}">
-                        <columns>
-                             <Column>
-                            <Text text="Request ID" />
-                        </Column>
-                        <Column>
-                            <Text text="Type" />
-                        </Column>
-                          <Column>
-                            <Text text="Full Name" />
-                        </Column>
-                        <Column>
-                            <Text text="Reason" />
-                        </Column>
-                        <Column>
-                            <Text text="Status" />
-                        </Column>
-                        <Column>
-                            <Text text="Start Day" />
-                        </Column>
-                        <Column>
-                            <Text text="End day" />
-                        </Column>
-                        <Column>
-                            <Text text="Is out of Day" />
-                        </Column>
-                        <Column>
-                            <Text text="Comment" />
-                        </Column>
-                        <Column>
-                            <Text text="Shift" />
-                        </Column>
-                            <Column>
-                                <Text text="Action" />
-                            </Column>
-                        </columns>
+                          <columns>
+                                <Column>
+                                    <Text text="ID" />
+                                </Column>
+                                <Column>
+                                    <Text text="DAY_OFF TYPE" />
+                                </Column>
+                                <Column>
+                                    <Text text="REASON" />
+                                </Column>
+                                <Column>
+                                    <Text text="USER_NAME" />
+                                </Column>
+                                <Column>
+                                    <Text text="STATUS" />
+                                </Column>
+                                <Column>
+                                    <Text text="START_DAY" />
+                                </Column>
+                                <Column>
+                                    <Text text="END_DAY" />
+                                </Column>
+                                <Column>
+                                    <Text text="IS_OUTOFDAY" />
+                                </Column>
+                                <Column>
+                                    <Text text="COMMENT" />
+                                </Column>
+                                <Column>
+                                    <Text text="SHIFT" />
+                                </Column>
+                                <Column>
+                                    <Text text="ACTION" />
+                                </Column>
+                            </columns>
                         <items>
                             <ColumnListItem>
                                 <cells>
@@ -101,20 +109,110 @@
                                     <Text text="{view>isOutOfDay}" />
                                     <Text text="{view>comment}" />
                                     <Text text="{view>shift}" />
-                                  <HBox>
-    <Button icon="sap-icon://accept" type="Accept" press="onAccepted" />
-    <Button icon="sap-icon://decline" type="Reject" press="onReject">
-        <layoutData>
-            <FlexItemData styleClass="sapUiTinyMarginBegin" />
-        </layoutData>
-    </Button>
-</HBox>
+                                 <HBox>
+                                            <Button
+                                                icon="sap-icon://accept"
+                                                type="Accept"
+                                                press="onAccepted"
+                                            />
+                                            <Button
+                                                icon="sap-icon://decline"
+                                                type="Reject"
+                                                press="onReject"
+                                            >
+                                                <layoutData>
+                                                    <FlexItemData
+                                                        styleClass="sapUiTinyMarginBegin"
+                                                    />
+                                                </layoutData>
+                                            </Button>
+                                        </HBox>
 
                                 </cells>
                             </ColumnListItem>
                         </items>
                     </Table>
 
+ </IconTabFilter>
+  <IconTabSeparator />
+  <IconTabFilter
+                        key="attachments"
+                        text="Manage Department"
+                    >
+                        <VBox>
+                            <FlexBox justifyContent="SpaceBetween">
+                               <Text text="{view>/department/0/departmentName}"    />
+                                <Button
+                                    text="Add Member"
+                                    type="Accept"
+                                    press="onOpenSelectDialog"
+                                />
+                            </FlexBox>
+                        </VBox>
+
+                        <HBox>
+                            <Table items="{path: 'user>/value'}">
+                                <columns>
+                                    <Column>
+                                        <Text text="ID" />
+                                    </Column>
+
+                                    <Column>
+                                        <Text text="Full Name" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="Role" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="Address" />
+                                    </Column>
+
+                                    <Column>
+                                        <Text text="action" />
+                                    </Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <Text text="{user>ID}" />
+                                            <Text text="{user>fullName}" />
+                                            <Text text="{user>role}" />
+                                            <Text text="{user>address}" />
+                                            <HBox>
+                                                <Button
+                                                    icon="sap-icon://edit"
+                                                    type="Transparent"
+                                                    press="onEditRequest"
+                                                />
+                                                <Button
+                                                    icon="sap-icon://delete"
+                                                    type="Reject"
+                                                    press="onDeleteRequest"
+                                                />
+                                            </HBox>
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                        </HBox>
+                    </IconTabFilter>
+                </items>
+
+                     </IconTabBar>
+                     <SelectDialog
+                id="userSelectDialog"
+                title="Select User"
+                liveChange="onSearchUser"  
+                multiSelect="true"
+                confirm=".onAddUser"
+            >
+                <items >
+                    <StandardListItem
+                        title="{depUser>ID}"
+                        description="{depUser>fullName}"
+                    />
+                </items>
+            </SelectDialog>
                     <Dialog id="commentDialog" title="Add Comment" stretch="{= ${device>/system/phone} }">
                         <VBox>
                             <TextArea id="commentTextArea" width="100%" placeholder="Add your comment here..." />
