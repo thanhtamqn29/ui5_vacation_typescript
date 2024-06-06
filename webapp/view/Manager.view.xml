@@ -1,0 +1,224 @@
+<mvc:View
+    controllerName="myapp.controller.Manager"
+    xmlns="sap.m"
+    xmlns:mvc="sap.ui.core.mvc"
+    displayBlock="true"
+>
+    <Page title="Manager page">
+        <customHeader>
+            <Bar>
+                <contentRight>
+                    <Button
+                        icon="sap-icon://bell"
+                        press="onNotificationPress"
+                    >
+                        <customData>
+                            <BadgeCustomData
+                                key="badge"
+                                value="2"
+                            />
+                        </customData>
+                    </Button>
+                    <Avatar
+                        initials="JD"
+                        displaySize="Custom"
+                        press="onProfilePress"
+                        customDisplaySize="2rem"
+                    />
+                </contentRight>
+            </Bar>
+        </customHeader>
+
+        <content>
+            <IconTabBar
+                id="iconTabBar1"
+                class="sapUiResponsiveContentPadding"
+            >
+                <items>
+                    <IconTabFilter
+                        key="info"
+                        text="Manage Request"
+                    >
+                        <Table
+                            id="requestsTable"
+                            items="{path: 'view>/value'}"
+                        >
+                            <columns>
+                                <Column>
+                                    <Text text="ID" />
+                                </Column>
+                                <Column>
+                                    <Text text="DAY_OFF TYPE" />
+                                </Column>
+                                <Column>
+                                    <Text text="REASON" />
+                                </Column>
+                                <Column>
+                                    <Text text="USER_NAME" />
+                                </Column>
+                                <Column>
+                                    <Text text="STATUS" />
+                                </Column>
+                                <Column>
+                                    <Text text="START_DAY" />
+                                </Column>
+                                <Column>
+                                    <Text text="END_DAY" />
+                                </Column>
+                                <Column>
+                                    <Text text="IS_OUTOFDAY" />
+                                </Column>
+                                <Column>
+                                    <Text text="COMMENT" />
+                                </Column>
+                                <Column>
+                                    <Text text="SHIFT" />
+                                </Column>
+                                <Column>
+                                    <Text text="ACTION" />
+                                </Column>
+                            </columns>
+                            <items>
+                                <ColumnListItem>
+                                    <cells>
+                                        <Text text="{view>ID}" />
+                                        <Text text="{view>dayOffType}" />
+                                        <Text text="{view>reason}" />
+                                        <Text text="{view>user/username}" />
+                                        <Text text="{view>status}" />
+                                        <Text text="{view>startDay}" />
+                                        <Text text="{view>endDay}" />
+                                        <Text text="{view>isOutOfDay}" />
+                                        <Text text="{view>comment}" />
+                                        <Text text="{view>shift}" />
+                                        <HBox>
+                                            <Button
+                                                icon="sap-icon://accept"
+                                                type="Accept"
+                                                press="onAccepted"
+                                            />
+                                            <Button
+                                                icon="sap-icon://decline"
+                                                type="Reject"
+                                                press="onReject"
+                                            >
+                                                <layoutData>
+                                                    <FlexItemData
+                                                        styleClass="sapUiTinyMarginBegin"
+                                                    />
+                                                </layoutData>
+                                            </Button>
+                                        </HBox>
+                                    </cells>
+                                </ColumnListItem>
+                            </items>
+                        </Table>
+                    </IconTabFilter>
+                    <IconTabSeparator />
+                    <IconTabFilter
+                        key="attachments"
+                        text="Manage Department"
+                    >
+                        <VBox>
+                            <FlexBox justifyContent="SpaceBetween">
+                               <Text text="{view>/department/0/departmentName}"    />
+                                <Button
+                                    text="Add Member"
+                                    type="Accept"
+                                    press="onOpenSelectDialog"
+                                />
+                            </FlexBox>
+                        </VBox>
+
+                        <HBox>
+                            <Table items="{path: 'user>/value'}">
+                                <columns>
+                                    <Column>
+                                        <Text text="ID" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="User Name" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="Full Name" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="Role" />
+                                    </Column>
+                                    <Column>
+                                        <Text text="Address" />
+                                    </Column>
+
+                                    <Column>
+                                        <Text text="action" />
+                                    </Column>
+                                </columns>
+                                <items>
+                                    <ColumnListItem>
+                                        <cells>
+                                            <Text text="{user>ID}" />
+                                            <Text text="{user>username}" />
+                                            <Text text="{user>fullName}" />
+                                            <Text text="{user>role}" />
+                                            <Text text="{user>address}" />
+                                            <HBox>
+                                                <Button
+                                                    icon="sap-icon://edit"
+                                                    type="Transparent"
+                                                    press="onEditRequest"
+                                                />
+                                                <Button
+                                                    icon="sap-icon://delete"
+                                                    type="Reject"
+                                                    press="onDeleteRequest"
+                                                />
+                                            </HBox>
+                                        </cells>
+                                    </ColumnListItem>
+                                </items>
+                            </Table>
+                        </HBox>
+                    </IconTabFilter>
+                </items>
+            </IconTabBar>
+            <SelectDialog
+                id="userSelectDialog"
+                title="Select User"
+                liveChange="onSearchUser"  
+                multiSelect="true"
+                selectionChange="showID"
+                confirm=".onAddUser"
+            >
+                <items >
+                    <StandardListItem
+                        title="{depUser>ID}"
+                        description="{depUser>username}"
+                    />
+                </items>
+            </SelectDialog>
+            <Dialog
+                id="commentDialog"
+                title="Add Comment"
+                stretch="{= ${device>/system/phone} }"
+            >
+                <VBox>
+                    <TextArea
+                        id="commentTextArea"
+                        width="100%"
+                        placeholder="Add your comment here..."
+                    />
+                    <HBox width="100%">
+                        <Button
+                            text="Submit"
+                            press="onSubmitComment"
+                        />
+                        <Button
+                            text="Cancel"
+                            press="onCancelComment"
+                        />
+                    </HBox>
+                </VBox>
+            </Dialog>
+        </content>
+    </Page>
+</mvc:View>

@@ -1,0 +1,10 @@
+.notificationPopover {
+    position: absolute;  
+    z-index: 1;
+    right: inherit;
+    margin-right: 80px;
+}
+
+.departmentText{
+    color: blue;
+}

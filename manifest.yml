@@ -12,6 +12,5 @@ applications:
   services:
   - vacation-xsuaa
   - vacation-html5-runtime
-  stack: cflinuxfs3
 
 
