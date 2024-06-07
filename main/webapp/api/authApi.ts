@@ -16,5 +16,12 @@ export const authApi = {
 				Authorization: `Bearer ${token}`
 			}
 		});
+	},
+	logout: async (token: string) => {
+		return await facilities.get("auth/logout()", {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		})
 	}
 };

@@ -4,9 +4,13 @@ import MessageBox from "sap/m/MessageBox";
 import Dialog from "sap/m/Dialog";
 import { requestApi } from "myapp/api/epl-requestApi";
 import { notificationApi } from "myapp/api/notificationApi";
+import Menu from "sap/m/Menu";
+import Event from "sap/ui/base/Event";
+import { authApi } from "myapp/api/authApi";
+
 
 export default class Main extends BaseController {
-	public async onInit(): void {
+	public async onInit(): Promise< void> {
 		const oViewModel = new JSONModel({
 			value: [],
 			newRequest: {},
@@ -265,5 +269,16 @@ export default class Main extends BaseController {
 		} else {
 			console.error("Popover not found");
 		}
+	}
+
+	public onProfilePress(oEvent : Event): void {
+		const menu = this.byId('profile-menu') as Menu;
+		menu.openBy(oEvent.getSource(), true);
+	}
+
+	public async onLogout(): Promise<void> {
+		await authApi.logout(localStorage.getItem("accessToken"));
+
+		window.location.href = window.location.origin + "/logout.do";
 	}
 }
