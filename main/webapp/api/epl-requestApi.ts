@@ -20,7 +20,7 @@ export const requestApi = {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},
-		})
+		});
 	},
 	removeRequest: async (id: any, status: object, token: string) => {
 		return await facilities.patch(`request/EplRequests/${id}`, status, {

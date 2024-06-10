@@ -59,7 +59,6 @@ export default class Main extends BaseController {
 			const oModel = this.getView().getModel("view") as JSONModel;
 			oModel.setProperty("/value", data.value);
 			loadingDialog.hide();
-
 		} catch (error) {
 			MessageBox.error(
 				error.response.data?.error?.message ||

@@ -15,7 +15,6 @@ import { authApi } from "myapp/api/authApi";
 import Event from "sap/ui/base/Event";
 import Menu from "sap/m/Menu";
 
-
 const loadingDialog = new isLoading();
 
 export default class Manager extends BaseController {
@@ -55,16 +54,14 @@ export default class Manager extends BaseController {
 			const oModel = this.getView().getModel("user") as JSONModel;
 			oModel.setProperty("/value", data.value);
 			loadingDialog.hide();
-
 		} catch (error) {
 			MessageBox.error(
 				error.response.data?.error?.message ||
-					"An error occurred while creating the leave request.", {
-						onClose: () => loadingDialog.hide()
-
-					}
+					"An error occurred while creating the leave request.",
+				{
+					onClose: () => loadingDialog.hide(),
+				}
 			);
-	
 		}
 	}
 	private async loadDepartment(): Promise<void> {
@@ -82,17 +79,14 @@ export default class Manager extends BaseController {
 			const oModel = this.getView().getModel("view") as JSONModel;
 			oModel.setProperty("/department", data.value);
 			loadingDialog.hide();
-
 		} catch (error) {
 			MessageBox.error(
 				error.response.data?.error?.message ||
-					"An error occurred while creating the leave request.", {
-						onClose: () => loadingDialog.hide()
-
-					}
+					"An error occurred while creating the leave request.",
+				{
+					onClose: () => loadingDialog.hide(),
+				}
 			);
-	
-
 		}
 	}
 	private async loadNotifications(): Promise<void> {
@@ -103,24 +97,22 @@ export default class Manager extends BaseController {
 				localStorage.getItem("accessToken")
 			);
 			if (status !== 200) throw new Error("Failed to create leave request");
-	
+
 			console.log(data);
-	
+
 			const oModel = this.getView().getModel("view") as JSONModel;
 			oModel.setProperty("/notifications", data.value);
 			oModel.setProperty("/totalNotifications", data.value.length);
 			loadingDialog.hide();
-
 		} catch (error) {
 			MessageBox.error(
 				error.response.data?.error?.message ||
-					"An error occurred while creating the leave request.", {
-						onClose: () => loadingDialog.hide()
-
-					}
+					"An error occurred while creating the leave request.",
+				{
+					onClose: () => loadingDialog.hide(),
+				}
 			);
 		}
-		
 	}
 	private async loadRequests(): Promise<void> {
 		try {
@@ -139,17 +131,14 @@ export default class Manager extends BaseController {
 			const oModel = this.getView().getModel("view") as JSONModel;
 			oModel.setProperty("/value", data.value);
 			loadingDialog.hide();
-
 		} catch (error) {
 			MessageBox.error(
 				error.response.data?.error?.message ||
-					"An error occurred while creating the leave request.", {
-						onClose: () => loadingDialog.hide()
-
-					}
+					"An error occurred while creating the leave request.",
+				{
+					onClose: () => loadingDialog.hide(),
+				}
 			);
-			
-
 		}
 	}
 
@@ -209,10 +198,9 @@ export default class Manager extends BaseController {
 			if (response.status !== 200) {
 				throw new Error(`Failed to ${action} request`);
 			}
-			MessageBox.success(`Request has ben ${action} successfully`,
-				{
-					onClose: () => loadingDialog.hide(),
-				});
+			MessageBox.success(`Request has ben ${action} successfully`, {
+				onClose: () => loadingDialog.hide(),
+			});
 
 			const oDialog = this.byId("commentDialog") as Dialog;
 			oDialog.close();
@@ -220,12 +208,11 @@ export default class Manager extends BaseController {
 		} catch (error) {
 			MessageBox.error(
 				error.response.data?.error?.message ||
-					"An error occurred while creating the leave request.", {
-						onClose: () => loadingDialog.hide()
-
-					}
+					"An error occurred while creating the leave request.",
+				{
+					onClose: () => loadingDialog.hide(),
+				}
 			);
-
 
 			const oDialog = this.byId("commentDialog") as Dialog;
 			oDialog.close();
@@ -275,17 +262,14 @@ export default class Manager extends BaseController {
 			});
 			oSelectDialog.open("");
 			loadingDialog.hide();
-
 		} catch (error) {
 			MessageBox.error(
 				error.response.data?.error?.message ||
-					"An error occurred while creating the leave request.", {
-						onClose: () => loadingDialog.hide()
-
-					}
+					"An error occurred while creating the leave request.",
+				{
+					onClose: () => loadingDialog.hide(),
+				}
 			);
-
-
 		}
 	}
 
@@ -305,7 +289,7 @@ export default class Manager extends BaseController {
 			);
 
 			try {
-			loadingDialog.show();
+				loadingDialog.show();
 
 				const { status } = await requestApi.inviteMembers(
 					{ ids: aUserIds },
@@ -313,21 +297,18 @@ export default class Manager extends BaseController {
 				);
 
 				if (status !== 200) throw new Error("Failed to create leave request");
-				MessageBox.success("User added to the department successfully!",
-					{
-						onClose: () => loadingDialog.hide(),
-					});
+				MessageBox.success("User added to the department successfully!", {
+					onClose: () => loadingDialog.hide(),
+				});
 				await this.loadUser();
 			} catch (error) {
 				MessageBox.error(
 					error.response.data?.error?.message ||
-						"An error occurred while creating the leave request.", {
-							onClose: () => loadingDialog.hide()
-	
-						}
+						"An error occurred while creating the leave request.",
+					{
+						onClose: () => loadingDialog.hide(),
+					}
 				);
-
-
 			}
 		}
 	}
