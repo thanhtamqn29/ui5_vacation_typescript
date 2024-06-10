@@ -5,12 +5,15 @@ import Dialog from "sap/m/Dialog";
 import TextArea from "sap/m/TextArea";
 import requestApi from "myapp/api/mg-request";
 import { notificationApi } from "myapp/api/notificationApi";
-import { fetchWithAuth } from "myapp/utils/fetchWithAuth";
 import StandardListItem from "sap/m/StandardListItem";
 import Filter from "sap/ui/model/Filter";
 import SelectDialog from "sap/m/SelectDialog";
 import FilterOperator from "sap/ui/model/FilterOperator";
 import ListBinding from "sap/ui/model/ListBinding";
+import { isLoading } from "myapp/utils/busyIndicator";
+
+
+const loadingDialog = new isLoading();
 
 export default class Manager extends BaseController {
 	public onInit(): void {
@@ -38,6 +41,7 @@ export default class Manager extends BaseController {
 	}
 	private async loadUser(): Promise<void> {
 		try {
+			loadingDialog.show();
 			const { data, status } = await requestApi.getUsers(
 				localStorage.getItem("accessToken")
 			);
@@ -47,15 +51,23 @@ export default class Manager extends BaseController {
 			}
 			const oModel = this.getView().getModel("user") as JSONModel;
 			oModel.setProperty("/value", data.value);
+			loadingDialog.hide();
+
 		} catch (error) {
 			MessageBox.error(
 				error.response.data?.error?.message ||
-					"An error occurred while creating the leave request."
+					"An error occurred while creating the leave request.", {
+						onClose: () => loadingDialog.hide()
+
+					}
 			);
+	
 		}
 	}
 	private async loadDepartment(): Promise<void> {
 		try {
+			loadingDialog.show();
+
 			const { data, status } = await requestApi.getDepartment(
 				localStorage.getItem("accessToken")
 			);
@@ -66,27 +78,51 @@ export default class Manager extends BaseController {
 
 			const oModel = this.getView().getModel("view") as JSONModel;
 			oModel.setProperty("/department", data.value);
+			loadingDialog.hide();
+
 		} catch (error) {
 			MessageBox.error(
 				error.response.data?.error?.message ||
-					"An error occurred while creating the leave request."
+					"An error occurred while creating the leave request.", {
+						onClose: () => loadingDialog.hide()
+
+					}
 			);
+	
+
 		}
 	}
 	private async loadNotifications(): Promise<void> {
-		const { data, status } = await notificationApi.getNotificationsMng(
-			localStorage.getItem("accessToken")
-		);
-		if (status !== 200) throw new Error("Failed to create leave request");
+		try {
+			loadingDialog.show();
 
-		console.log(data);
+			const { data, status } = await notificationApi.getNotificationsMng(
+				localStorage.getItem("accessToken")
+			);
+			if (status !== 200) throw new Error("Failed to create leave request");
+	
+			console.log(data);
+	
+			const oModel = this.getView().getModel("view") as JSONModel;
+			oModel.setProperty("/notifications", data.value);
+			oModel.setProperty("/totalNotifications", data.value.length);
+			loadingDialog.hide();
 
-		const oModel = this.getView().getModel("view") as JSONModel;
-		oModel.setProperty("/notifications", data.value);
-		oModel.setProperty("/totalNotifications", data.value.length);
+		} catch (error) {
+			MessageBox.error(
+				error.response.data?.error?.message ||
+					"An error occurred while creating the leave request.", {
+						onClose: () => loadingDialog.hide()
+
+					}
+			);
+		}
+		
 	}
 	private async loadRequests(): Promise<void> {
 		try {
+			loadingDialog.show();
+
 			const { data, status } = await requestApi.getRequests(
 				localStorage.getItem("accessToken")
 			);
@@ -99,11 +135,18 @@ export default class Manager extends BaseController {
 
 			const oModel = this.getView().getModel("view") as JSONModel;
 			oModel.setProperty("/value", data.value);
+			loadingDialog.hide();
+
 		} catch (error) {
 			MessageBox.error(
 				error.response.data?.error?.message ||
-					"An error occurred while creating the leave request."
+					"An error occurred while creating the leave request.", {
+						onClose: () => loadingDialog.hide()
+
+					}
 			);
+			
+
 		}
 	}
 
@@ -149,6 +192,8 @@ export default class Manager extends BaseController {
 		comment: string
 	): Promise<void> {
 		try {
+			loadingDialog.show();
+
 			const status = action === "accepted" ? "accepted" : "rejected";
 			console.log(status);
 
@@ -161,7 +206,10 @@ export default class Manager extends BaseController {
 			if (response.status !== 200) {
 				throw new Error(`Failed to ${action} request`);
 			}
-			MessageBox.success(`Request has ben ${action} successfully`);
+			MessageBox.success(`Request has ben ${action} successfully`,
+				{
+					onClose: () => loadingDialog.hide(),
+				});
 
 			const oDialog = this.byId("commentDialog") as Dialog;
 			oDialog.close();
@@ -169,8 +217,13 @@ export default class Manager extends BaseController {
 		} catch (error) {
 			MessageBox.error(
 				error.response.data?.error?.message ||
-					"An error occurred while creating the leave request."
+					"An error occurred while creating the leave request.", {
+						onClose: () => loadingDialog.hide()
+
+					}
 			);
+
+
 			const oDialog = this.byId("commentDialog") as Dialog;
 			oDialog.close();
 			void this.loadRequests();
@@ -198,6 +251,8 @@ export default class Manager extends BaseController {
 		const oSelectDialog = this.byId("userSelectDialog") as SelectDialog;
 
 		try {
+			loadingDialog.show();
+
 			const { data, status } = await requestApi.getNullDepartmentUser(
 				localStorage.getItem("accessToken")
 			);
@@ -216,11 +271,18 @@ export default class Manager extends BaseController {
 				}),
 			});
 			oSelectDialog.open("");
+			loadingDialog.hide();
+
 		} catch (error) {
 			MessageBox.error(
 				error.response.data?.error?.message ||
-					"An error occurred while creating the leave request."
+					"An error occurred while creating the leave request.", {
+						onClose: () => loadingDialog.hide()
+
+					}
 			);
+
+
 		}
 	}
 
@@ -240,19 +302,29 @@ export default class Manager extends BaseController {
 			);
 
 			try {
+			loadingDialog.show();
+
 				const { status } = await requestApi.inviteMembers(
 					{ ids: aUserIds },
 					localStorage.getItem("accessToken")
 				);
 
 				if (status !== 200) throw new Error("Failed to create leave request");
-				MessageBox.success("User added to the department successfully!");
+				MessageBox.success("User added to the department successfully!",
+					{
+						onClose: () => loadingDialog.hide(),
+					});
 				await this.loadUser();
 			} catch (error) {
 				MessageBox.error(
 					error.response.data?.error?.message ||
-						"An error occurred while creating the leave request."
+						"An error occurred while creating the leave request.", {
+							onClose: () => loadingDialog.hide()
+	
+						}
 				);
+
+
 			}
 		}
 	}

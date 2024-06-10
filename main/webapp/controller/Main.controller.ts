@@ -7,10 +7,11 @@ import { notificationApi } from "myapp/api/notificationApi";
 import Menu from "sap/m/Menu";
 import Event from "sap/ui/base/Event";
 import { authApi } from "myapp/api/authApi";
+import { isLoading } from "myapp/utils/busyIndicator";
 
-
+const loadingDialog = new isLoading();
 export default class Main extends BaseController {
-	public async onInit(): Promise< void> {
+	public async onInit(): Promise<void> {
 		const oViewModel = new JSONModel({
 			value: [],
 			newRequest: {},
@@ -19,23 +20,37 @@ export default class Main extends BaseController {
 			totalNotifications: "0",
 		});
 		this.getView().setModel(oViewModel, "view");
-		void await this.loadRequests();
-		void await this.loadNotifications();
+		void (await this.loadRequests());
+		void (await this.loadNotifications());
 	}
+
 	private async loadNotifications(): Promise<void> {
-		const { data, status } = await notificationApi.getNotificationsEpl(
-			localStorage.getItem("accessToken")
-		);
-		if (status !== 200) throw new Error("Failed to create leave request");
+		try {
+			loadingDialog.show();
 
-		console.log(data);
+			const { data, status } = await notificationApi.getNotificationsEpl(
+				localStorage.getItem("accessToken")
+			);
+			if (status !== 200) throw new Error("Failed to create leave request");
 
-		const oModel = this.getView().getModel("view") as JSONModel;
-		oModel.setProperty("/notifications", data.value);
-		oModel.setProperty("/totalNotifications", data.value.length);
+			const oModel = this.getView().getModel("view") as JSONModel;
+			oModel.setProperty("/notifications", data.value);
+			oModel.setProperty("/totalNotifications", data.value.length);
+			loadingDialog.hide();
+		} catch (error) {
+			MessageBox.error(
+				error.response.data?.error?.message ||
+					"An error occurred while creating the leave request.",
+				{
+					onClose: () => loadingDialog.hide(),
+				}
+			);
+		}
 	}
 	private async loadRequests(): Promise<void> {
 		try {
+			loadingDialog.show();
+
 			const token = localStorage.getItem("accessToken");
 			const { data } = await requestApi.getRequests(token);
 
@@ -43,10 +58,15 @@ export default class Main extends BaseController {
 
 			const oModel = this.getView().getModel("view") as JSONModel;
 			oModel.setProperty("/value", data.value);
+			loadingDialog.hide();
+
 		} catch (error) {
 			MessageBox.error(
 				error.response.data?.error?.message ||
-					"An error occurred while creating the leave request."
+					"An error occurred while creating the leave request.",
+				{
+					onClose: () => loadingDialog.hide(),
+				}
 			);
 		}
 	}
@@ -78,6 +98,8 @@ export default class Main extends BaseController {
 		}
 
 		try {
+			loadingDialog.show();
+
 			const response = await requestApi.createRequest(newRequest, token);
 
 			if (response.status !== 201) {
@@ -91,7 +113,9 @@ export default class Main extends BaseController {
 
 			oModel.setProperty("/value", requests);
 
-			MessageBox.success("Leave request created successfully!");
+			MessageBox.success("Leave request created successfully!", {
+				onClose: () => loadingDialog.hide(),
+			});
 
 			const oDialog = this.byId("createRequestDialog") as Dialog;
 			if (oDialog) {
@@ -102,7 +126,10 @@ export default class Main extends BaseController {
 		} catch (error) {
 			MessageBox.error(
 				error.response.data?.error?.message ||
-					"An error occurred while creating the leave request."
+					"An error occurred while creating the leave request.",
+				{
+					onClose: () => loadingDialog.hide(),
+				}
 			);
 		}
 	}
@@ -120,6 +147,8 @@ export default class Main extends BaseController {
 			onClose: async (sAction: any) => {
 				if (sAction === MessageBox.Action.YES) {
 					try {
+						loadingDialog.show();
+
 						const response = await requestApi.removeRequest(
 							oItem.ID,
 							{ status: "removed" },
@@ -135,11 +164,16 @@ export default class Main extends BaseController {
 							.filter((request: any) => request.ID !== oItem.ID);
 						oModel.setProperty("/value", requests);
 
-						MessageBox.success("Leave request deleted successfully!");
+						MessageBox.success("Leave request deleted successfully!", {
+							onClose: () => loadingDialog.hide(),
+						});
 					} catch (error) {
 						MessageBox.error(
 							error.response.data?.error?.message ||
-								"An error occurred while creating the leave request."
+								"An error occurred while creating the leave request.",
+							{
+								onClose: () => loadingDialog.hide(),
+							}
 						);
 					}
 				}
@@ -210,6 +244,8 @@ export default class Main extends BaseController {
 		}
 
 		try {
+			loadingDialog.show();
+
 			const response = await requestApi.updateRequest(
 				currentRequest.ID,
 				currentRequest,
@@ -231,7 +267,9 @@ export default class Main extends BaseController {
 
 			oModel.setProperty("/value", requests);
 
-			MessageBox.success("Leave request updated successfully!");
+			MessageBox.success("Leave request updated successfully!", {
+				onClose: () => loadingDialog.hide(),
+			});
 
 			const oDialog = this.byId("updateRequestDialog") as Dialog;
 			if (oDialog) {
@@ -240,7 +278,10 @@ export default class Main extends BaseController {
 		} catch (error) {
 			MessageBox.error(
 				error.response.data?.error?.message ||
-					"An error occurred while creating the leave request."
+					"An error occurred while creating the leave request.",
+				{
+					onClose: () => loadingDialog.hide(),
+				}
 			);
 		}
 	}
@@ -262,7 +303,7 @@ export default class Main extends BaseController {
 				popoverDomRef.style.display === ""
 			) {
 				popoverDomRef.style.display = "block";
-				void await this.loadNotifications();
+				void (await this.loadNotifications());
 			} else {
 				popoverDomRef.style.display = "none";
 			}
@@ -271,8 +312,8 @@ export default class Main extends BaseController {
 		}
 	}
 
-	public onProfilePress(oEvent : Event): void {
-		const menu = this.byId('profile-menu') as Menu;
+	public onProfilePress(oEvent: Event): void {
+		const menu = this.byId("profile-menu") as Menu;
 		menu.openBy(oEvent.getSource(), true);
 	}
 

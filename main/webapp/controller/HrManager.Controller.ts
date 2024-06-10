@@ -9,6 +9,10 @@ import SearchField from "sap/m/SearchField";
 import ListBinding from "sap/ui/model/ListBinding";
 import DatePicker from "sap/m/DatePicker";
 import { requestApi } from "myapp/api/hr-requestApi";
+import { isLoading } from "myapp/utils/busyIndicator";
+
+const loadingDialog = new isLoading();
+
 export default class HrManager extends BaseController {
 	public onInit(): void {
 		const oViewModel = new JSONModel({
@@ -22,6 +26,7 @@ export default class HrManager extends BaseController {
 
 	private async loadRequests(): Promise<void> {
 		try {
+			loadingDialog.show();
 			const { data, status } = await requestApi.getRequests(
 				localStorage.getItem("accessToken")
 			);
@@ -32,16 +37,23 @@ export default class HrManager extends BaseController {
 
 			const oModel = this.getView().getModel("view") as JSONModel;
 			oModel.setProperty("/value", data.value);
+			loadingDialog.hide();
+
 		} catch (error) {
 			MessageBox.error(
 				error.response.data?.error?.message ||
-					"An error occurred while creating the leave request."
+					"An error occurred while creating the leave request.",
+				{
+					onClose: () => loadingDialog.hide(),
+				}
 			);
 		}
 	}
 
 	private async loadDepartments(): Promise<void> {
 		try {
+			loadingDialog.show();
+
 			const { data, status } = await requestApi.getDepartments(
 				localStorage.getItem("accessToken")
 			);
@@ -62,10 +74,15 @@ export default class HrManager extends BaseController {
 					})
 				);
 			});
+			loadingDialog.hide();
+
 		} catch (error) {
 			MessageBox.error(
 				error.response.data?.error?.message ||
-					"An error occurred while creating the leave request."
+					"An error occurred while creating the leave request.",
+				{
+					onClose: () => loadingDialog.hide(),
+				}
 			);
 		}
 	}
@@ -126,16 +143,22 @@ export default class HrManager extends BaseController {
 
 	private async exportToExcel(): Promise<void> {
 		try {
-			const response = await requestApi.exportExcel(localStorage.getItem("accessToken"));
-	
+			loadingDialog.show();
+
+			const response = await requestApi.exportExcel(
+				localStorage.getItem("accessToken")
+			);
+
 			if (response.status !== 200) {
 				throw new Error("Failed to export to Excel.");
 			}
 			console.log(response.data);
-			
+
 			// Assuming response.data is of type ArrayBuffer
-			const blob =  new Blob([response.data], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
-	
+			const blob = new Blob([response.data], {
+				type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+			});
+
 			const url = window.URL.createObjectURL(blob);
 			const a = document.createElement("a");
 			a.href = url;
@@ -143,14 +166,18 @@ export default class HrManager extends BaseController {
 			document.body.appendChild(a);
 			a.click();
 			a.remove();
-	
+
 			// Optionally, you can revoke the object URL after use to free up memory
 			window.URL.revokeObjectURL(url);
-	
+			loadingDialog.hide();
+
 		} catch (error) {
 			MessageBox.error(
 				error.response.data?.error?.message ||
-					"An error occurred while creating the leave request."
+					"An error occurred while creating the leave request.",
+				{
+					onClose: () => loadingDialog.hide(),
+				}
 			);
 		}
 	}
