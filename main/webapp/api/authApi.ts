@@ -23,5 +23,5 @@ export const authApi = {
 				Authorization: `Bearer ${token}`
 			}
 		})
-	}
+	},
 };
