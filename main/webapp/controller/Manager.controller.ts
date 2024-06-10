@@ -11,6 +11,9 @@ import SelectDialog from "sap/m/SelectDialog";
 import FilterOperator from "sap/ui/model/FilterOperator";
 import ListBinding from "sap/ui/model/ListBinding";
 import { isLoading } from "myapp/utils/busyIndicator";
+import { authApi } from "myapp/api/authApi";
+import Event from "sap/ui/base/Event";
+import Menu from "sap/m/Menu";
 
 
 const loadingDialog = new isLoading();
@@ -286,14 +289,14 @@ export default class Manager extends BaseController {
 		}
 	}
 
-	public onSearchUser(oEvent: any): void {
+	public onSearchUser(oEvent: Event): void {
 		const sValue = oEvent.getParameter("value");
 		const oFilter = new Filter("username", FilterOperator.Contains, sValue);
 		const oBinding = oEvent.getSource().getBinding("items") as ListBinding;
 		oBinding.filter([oFilter]);
 	}
 
-	public async onAddUser(oEvent: any): Promise<void> {
+	public async onAddUser(oEvent: Event): Promise<void> {
 		const oSelectedItem = oEvent.getParameters("selectedItem").selectedItems;
 
 		if (oSelectedItem && oSelectedItem.length > 0) {
@@ -327,5 +330,15 @@ export default class Manager extends BaseController {
 
 			}
 		}
+	}
+	public onProfilePress(oEvent: Event): void {
+		const menu = this.byId("profile-menu") as Menu;
+		menu.openBy(oEvent.getSource(), true);
+	}
+
+	public async onLogout(): Promise<void> {
+		await authApi.logout(localStorage.getItem("accessToken"));
+
+		window.location.href = window.location.origin + "/logout.do";
 	}
 }

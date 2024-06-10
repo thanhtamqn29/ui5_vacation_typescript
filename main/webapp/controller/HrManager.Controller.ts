@@ -8,8 +8,12 @@ import FilterOperator from "sap/ui/model/FilterOperator";
 import SearchField from "sap/m/SearchField";
 import ListBinding from "sap/ui/model/ListBinding";
 import DatePicker from "sap/m/DatePicker";
+import Event from "sap/ui/base/Event";
+
 import { requestApi } from "myapp/api/hr-requestApi";
 import { isLoading } from "myapp/utils/busyIndicator";
+import { authApi } from "myapp/api/authApi";
+import Menu from "sap/m/Menu";
 
 const loadingDialog = new isLoading();
 
@@ -154,7 +158,6 @@ export default class HrManager extends BaseController {
 			}
 			console.log(response.data);
 
-			// Assuming response.data is of type ArrayBuffer
 			const blob = new Blob([response.data], {
 				type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
 			});
@@ -167,7 +170,6 @@ export default class HrManager extends BaseController {
 			a.click();
 			a.remove();
 
-			// Optionally, you can revoke the object URL after use to free up memory
 			window.URL.revokeObjectURL(url);
 			loadingDialog.hide();
 
@@ -187,5 +189,15 @@ export default class HrManager extends BaseController {
 		const month = String(dateObj.getMonth() + 1).padStart(2, "0");
 		const day = String(dateObj.getDate()).padStart(2, "0");
 		return `${year}-${month}-${day}`;
+	}
+	public onProfilePress(oEvent: Event): void {
+		const menu = this.byId("profile-menu") as Menu;
+		menu.openBy(oEvent.getSource(), true);
+	}
+
+	public async onLogout(): Promise<void> {
+		await authApi.logout(localStorage.getItem("accessToken"));
+
+		window.location.href = window.location.origin + "/logout.do";
 	}
 }

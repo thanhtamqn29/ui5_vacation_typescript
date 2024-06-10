@@ -24,12 +24,18 @@
                     />
                 </customData>
             </Button>
-            <Avatar
+              <Avatar
                 initials="JD"
                 displaySize="Custom"
-                press="onProfilePress"
+                press=".onProfilePress"
                 customDisplaySize="2rem"
+                ariaHasPopup="Menu"
+                id="avatar-item"
             />
+            <Menu id="profile-menu">
+            <MenuItem press=".onLogout" text="Logout" />
+
+            </Menu>
             <Popover
                 class="notificationPopover"
                 id="notificationPopover"
