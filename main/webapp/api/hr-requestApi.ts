@@ -20,7 +20,7 @@ export const requestApi = {
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},
-			responseType: 'blob'
+			responseType: "blob",
 		});
 	},
 };

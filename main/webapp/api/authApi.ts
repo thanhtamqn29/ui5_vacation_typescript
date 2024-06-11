@@ -1,7 +1,6 @@
 import { facilities } from "./config";
 
 export const authApi = {
-
 	getIASAttributes: async (data: any) => {
 		return await facilities.post("public/checkingIASId", data);
 	},
@@ -10,11 +9,18 @@ export const authApi = {
 		return await facilities.post("public/login", { username, password });
 	},
 
-	getCurrentUser : async (token: string) => {
+	getCurrentUser: async (token: string) => {
 		return await facilities.get("auth/Users", {
 			headers: {
-				Authorization: `Bearer ${token}`
-			}
+				Authorization: `Bearer ${token}`,
+			},
 		});
-	}
+	},
+	logout: async (token: string) => {
+		return await facilities.get("auth/logout()", {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
+	},
 };

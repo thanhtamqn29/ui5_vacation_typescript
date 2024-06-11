@@ -7,7 +7,7 @@ resources:
     paths:
       webapp: dist
 framework:
-  name: SAPUI5
+  name: OpenUI5
   version: "1.124.0"
   libraries:
     - name: sap.m

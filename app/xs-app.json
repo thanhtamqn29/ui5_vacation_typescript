@@ -1,6 +1,9 @@
 {
   "welcomeFile": "main/index.html",
   "authenticationMethod": "route",
+  "logout": {
+    "logoutEndpoint": "/logout.do"
+  },
   "routes": [
     {
       "source": "^/main/(.*)$",

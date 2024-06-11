@@ -1,6 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
 
-const url = "https://vacation-srv-bright-numbat-cu.cfapps.us10-001.hana.ondemand.com";
+const url =
+	"https://vacation-srv-bright-numbat-cu.cfapps.us10-001.hana.ondemand.com";
 
 export const facilities = {
 	get: async (srv: string, config?: AxiosRequestConfig) => {
@@ -17,7 +18,5 @@ export const facilities = {
 	},
 	delete: async (srv: string, config?: AxiosRequestConfig) => {
 		return await axios.delete(`${url}/${srv}`, config);
-	}
-	
-
+	},
 };
