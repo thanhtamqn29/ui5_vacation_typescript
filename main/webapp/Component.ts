@@ -21,6 +21,7 @@ export default class Component extends UIComponent {
 
 		// create the views based on the url/hash
 		this.getRouter().initialize();
+		this.renderRecastChatbot();
 	}
 
 	/**
@@ -46,5 +47,15 @@ export default class Component extends UIComponent {
 			}
 		}
 		return this.contentDensityClass;
+	};
+	public renderRecastChatbot() {
+		if (!document.getElementById("cai-webchat")) {
+			var s = document.createElement("script");
+			   s.setAttribute("id", "cai-webchat");
+			  s.setAttribute("src", "https://cdn.cai.tools.sap/webchat/webchat.js");
+				  document.body.appendChild(s);
+			}
+			s.setAttribute("channelId", "512a6cdb-4f7d-4466-a8dd-fccce92b5b42");
+			s.setAttribute("token", "<<fed84a15a86bc8e00b08906afe06f272");
 	}
 }
